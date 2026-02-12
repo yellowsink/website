@@ -1,0 +1,15 @@
+---
+const { name, url, feed, details } = Astro.props;
+---
+
+<li>
+	<a href={new URL(feed, url).href} style="text-decoration: none">
+		<img alt="RSS Feed" src="/rss.svg" style="height: .8em; transform: translateY(1px)" />
+	</a>
+
+	<a href={url}>{name}</a><!-- {details && `: ${details}`} -->
+
+	{details && (
+		<div style="margin-left: 2rem; opacity: 0.7">{details}</div>
+	)}
+</li>

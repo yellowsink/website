@@ -8,6 +8,10 @@
 		"path": "/accounts"
 	},
 	{
+		"name": "Blogroll",
+		"path": "/blogroll"
+	},
+	{
 		"name": "Ouroboros",
 		"path": "/ouroboros"
 	},

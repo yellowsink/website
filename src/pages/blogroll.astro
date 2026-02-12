@@ -1,0 +1,37 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import data from "../blogroll.json";
+import BlogrollItem from "../components/BlogrollItem.astro";
+---
+
+<BaseLayout title="Blogroll">
+	<h1>Blogroll</h1>
+
+	<p>A collection of blogs I subscribe to or otherwise recommend, and particular posts I liked a lot.</p>
+	<p>You should read my blog, <a href="https://uwu.network/~sink/blog">Quiet System</a>! ;)</p>
+
+	<h3>Blogs I Read</h3>
+	<ul>
+		{data.blogsIRead.map(([name, url, feed, details]) => <BlogrollItem {...{ name, url, feed, details }} />)}
+	</ul>
+
+	<h3>Blogs I Don't Read But Do Recommend</h3>
+	<ul>
+		{data.blogsIRecommend.map(([name, url, feed, details]) => <BlogrollItem {...{ name, url, feed, details }} />)}
+	</ul>
+
+	<h3>Articles I Like</h3>
+	<ul>
+		{
+			data.articles.map((url) => (
+				<li>
+					<a href={url}>{url}</a>
+				</li>
+			))
+		}
+	</ul>
+	<p>
+		Another note, I have a bunch of saved articles on Harmonic on my <em>old</em> phone that I'm yet to rescue. Once I
+		do that I'll expand the articles list! I aim to keep this relatively up to date, we'll see.
+	</p>
+</BaseLayout>

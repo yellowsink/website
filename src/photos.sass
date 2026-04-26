@@ -1,0 +1,31 @@
+.photo-listing-grid
+	display: flex
+	flex-flow: row wrap
+
+	img
+		height: 7.5rem
+
+.photo-view
+	margin-bottom: 2rem
+
+.photo-view .photo-wrapper
+	display: grid
+	grid-template-columns: auto 1fr auto
+	gap: 1rem
+	align-items: center
+	margin-bottom: 2rem
+
+	img
+		flex: 1
+		width: 100%
+
+.exif-tags > span
+	display: inline-block
+	padding: 1px 0
+	padding-right: .5rem
+	margin-right: .5rem
+	font-size: .85em
+	opacity: .8
+
+	&:not(:last-child)
+		border-right: 1px solid #71717a

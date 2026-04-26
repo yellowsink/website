@@ -1,4 +1,5 @@
 import { featuredCategories, rolls } from "./data.ts";
+import { capitalize } from "./util.ts";
 
 export function RollListing() {
 	const [filmRolls] = rolls;
@@ -22,13 +23,6 @@ export function RollListing() {
 		</div>
 	);
 }
-
-const dontCapitalize = ["and", "to", "or"];
-const capitalize = (str: string) =>
-	str
-		.split(" ")
-		.map((word) => (dontCapitalize.includes(word) ? word : word[0].toUpperCase() + word.slice(1)))
-		.join(" ");
 
 export function CategoryListing() {
 	const [featured] = featuredCategories;

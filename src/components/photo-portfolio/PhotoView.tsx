@@ -1,4 +1,5 @@
-import { getPhotoById, type Photo, photoUrlForId } from "./data.ts";
+import { featuredCategories, getPhotoById, type Photo, photoUrlForId } from "./data.ts";
+import { PhotoGrid } from "./PhotoListingPage.tsx";
 
 export function RawPhoto(props: { photo: Photo; style?: string; class?: string }) {
 	return <img src={photoUrlForId(props.photo.id)} alt={props.photo.desc} style={props.style} class={props.class} />;
@@ -7,21 +8,21 @@ export function RawPhoto(props: { photo: Photo; style?: string; class?: string }
 // TODO: EXIF
 export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: () => void }) {
 	return (
-		<div>
+		<div class="photo-view">
 			<h2>{props.photo.name ?? `Photo ${props.photo.id}`}</h2>
 			{props.photo.desc && <span>{props.photo.desc}</span>}
 
-			<div>
+			<div class="photo-wrapper">
 				<button onclick={props.goPrev} disabled={!props.goPrev}>
-					Back
+					&lt;
 				</button>
-				<RawPhoto photo={props.photo} />
+				<RawPhoto photo={props.photo} class="the-photo" />
 				<button onclick={props.goNext} disabled={!props.goNext}>
-					Forward
+					&gt;
 				</button>
 			</div>
 
-			<div>
+			<div class="exif-tags">
 				<span>Sony DSLR-A230</span>
 				<span>Minolta AF 70-210mm F4.5-5.6 [II]</span>
 				<span>1/300 sec</span>
@@ -49,5 +50,21 @@ export function PhotoPage() {
 
 	const [photo] = getPhotoById(photoId);
 
-	return <>{photo.loading ? "Loading photo..." : <PhotoView photo={photo()} />}</>;
+	return (
+		<>
+			{photo.loading ? (
+				"Loading photo..."
+			) : (
+				<>
+					<PhotoView photo={photo()} />
+
+					{!isNaN(rollId) || featuredCategory ? (
+						<PhotoGrid roll={isNaN(rollId) ? undefined : rollId} category={featuredCategory} />
+					) : (
+						""
+					)}
+				</>
+			)}
+		</>
+	);
 }

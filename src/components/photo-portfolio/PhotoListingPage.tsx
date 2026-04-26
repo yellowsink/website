@@ -1,8 +1,9 @@
 import { photosForCategory, photosForRoll, type Roll, rolls } from "./data.ts";
 import { createMemo } from "solid-js";
 import { RawPhoto } from "./PhotoView.tsx";
+import { capitalize } from "./util.ts";
 
-export function PhotoListingPage(props: { roll?: number; category?: string }) {
+export function PhotoGrid(props: { roll?: number; category?: string }) {
 	const [allRolls] = rolls;
 	const roll = () => allRolls()?.find((r) => r.id === props.roll);
 
@@ -16,13 +17,10 @@ export function PhotoListingPage(props: { roll?: number; category?: string }) {
 
 	return (
 		<div>
-			<h2>{props.roll ? `Photos in film roll: ${roll()?.name}` : `Photos in category: ${props.category}`}</h2>
-
-			{/* gallery */}
 			{photosResource().loading ? (
 				"Loading photos..."
 			) : (
-				<div>
+				<div class="photo-listing-grid">
 					{photosResource()().map((p) => (
 						<a href={`/photo/photo?p=${p.id}${urlAddon}`}>
 							<RawPhoto photo={p} />
@@ -30,6 +28,23 @@ export function PhotoListingPage(props: { roll?: number; category?: string }) {
 					))}
 				</div>
 			)}
+		</div>
+	);
+}
+
+export function PhotoListingPage(props: { roll?: number; category?: string }) {
+	const [allRolls] = rolls;
+	const roll = () => allRolls()?.find((r) => r.id === props.roll);
+
+	return (
+		<div>
+			<h2>
+				{props.roll
+					? `Photos in film roll: ${roll()?.name ?? "..."}`
+					: `Photos in category: ${capitalize(props.category)}`}
+			</h2>
+
+			<PhotoGrid roll={props.roll} category={props.category} />
 		</div>
 	);
 }

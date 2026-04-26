@@ -19,13 +19,13 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 			{props.photo.desc && <p>{props.photo.desc}</p>}
 
 			<div class="photo-wrapper">
-				<button onclick={props.goPrev} disabled={!props.goPrev}>
+				{/*<button onclick={props.goPrev} disabled={!props.goPrev}>
 					&lt;
-				</button>
+				</button>*/}
 				<RawPhoto photo={props.photo} class="the-photo" />
-				<button onclick={props.goNext} disabled={!props.goNext}>
+			{/*	<button onclick={props.goNext} disabled={!props.goNext}>
 					&gt;
-				</button>
+				</button>*/}
 			</div>
 
 			{ex && (

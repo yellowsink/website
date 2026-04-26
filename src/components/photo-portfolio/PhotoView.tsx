@@ -11,6 +11,8 @@ export function RawPhoto(props: { photo: Photo; style?: string; class?: string }
 export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: () => void }) {
 	const [editModalOpen, setEditModalOpen] = createSignal(false);
 
+	const ex = props.photo.exif ? JSON.parse(props.photo.exif) : undefined;
+
 	return (
 		<div class="photo-view">
 			<h2>{props.photo.name || `Photo ${props.photo.id}`}</h2>
@@ -26,19 +28,26 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 				</button>
 			</div>
 
-			<div class="exif-tags">
-				<span>Sony DSLR-A230</span>
-				<span>Minolta AF 70-210mm F4.5-5.6 [II]</span>
-				<span>1/300 sec</span>
-				<span>
-					<em>f</em>/13.0
-				</span>
-				<span>50.0 mm</span>
-				<span>ISO 1600</span>
-				<span>2026-04-22 18:00</span>
-				<span>Shutter Priority</span>
-				(wip, all this is fake rn)
-			</div>
+			{ex && (
+				<div class="exif-tags">
+					{(ex.make || ex.cameraModelName) && (
+						<span>
+							{ex.make ?? ""} {ex.cameraModelName ?? ""}
+						</span>
+					)}
+					{ex.lensType && <span>{ex.lensType}</span>}
+					{ex.shutterSpeed && <span>{ex.shutterSpeed} sec</span>}
+					{ex.apertureSetting && (
+						<span>
+							<em>f</em>/{ex.apertureSetting}
+						</span>
+					)}
+					{ex.focalLengthIn35mmFormat && <span>{ex.focalLengthIn35mmFormat}</span>}
+					{ex.iso && <span>ISO {ex.iso}</span>}
+					<span>{props.photo.datetaken}</span>
+					{ex.exposureProgram && <span>{ex.exposureProgram}</span>}
+				</div>
+			)}
 
 			{authPassword && <button onclick={() => setEditModalOpen(true)}>Edit data</button>}
 

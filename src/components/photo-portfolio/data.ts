@@ -16,6 +16,7 @@ export interface Photo {
 	desc: string;
 	is_fave: boolean;
 	categories: string; // comma separated
+	exif: string | null;
 }
 
 export interface FeaturedCategory {

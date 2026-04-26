@@ -84,3 +84,13 @@ export function deleteRoll(id: number) {
 		credentials: "include",
 	});
 }
+
+export function addPhoto(roll: number, name: string, content: Blob) {
+	if (!authPassword) throw new Error("cannot add photo without auth");
+
+	return fetch(`${BASE}/admin/photo?roll=${roll}&filename=${name}`, {
+		method: "POST",
+		headers: { Authorization: "Basic " + btoa(`admin:${authPassword}`) },
+		body: content,
+	});
+}

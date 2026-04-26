@@ -24,7 +24,11 @@ const fixedPath = currentPath.length > 1 && currentPath.endsWith("/") ? currentP
 			routes.map((route, i) => (
 				<li class="list-none">
 					<a
-						class={route.path === fixedPath ? "active" : ""}
+						class={
+							(route.path.length > 1 ? fixedPath.startsWith(route.path) : route.path === fixedPath)
+								? "active"
+								: ""
+						}
 						href={route.path}
 						style={"page-transition-tag: _" + i}
 					>

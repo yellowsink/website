@@ -12,6 +12,10 @@
 		"path": "/blogroll"
 	},
 	{
+		"name": "Photography",
+		"path": "/photo"
+	},
+	{
 		"name": "Ouroboros",
 		"path": "/ouroboros"
 	},

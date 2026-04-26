@@ -6,6 +6,7 @@ redir /heirarchycs*      https://uwu.network/~sink/blog/2022/05/heirarchycs     
 redir /hlcc*             https://uwu.network/~sink/blog/2022/02/hlcc             permanent
 redir /linux_audio_prod* https://uwu.network/~sink/blog/2022/02/linux_audio_prod permanent
 redir /simian*           https://github.com/yellowsink/simian                    permanent
+redir /plugins*          https://yellowsink.github.io/shelter-plugins            permanent
 
 header Cache-Control "public, max-age=600" # 600s taken from gh pages
 

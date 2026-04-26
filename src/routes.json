@@ -29,7 +29,7 @@
 	},
 	{
 		"name": "Discord plugins",
-		"path": "/plugins"
+		"path": "https://yellowsink.github.io/shelter-plugins/"
 	},
 	{
 		"name": "予定 Yotei",

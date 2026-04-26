@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { RollListing, CategoryListing } from "../../components/photo-portfolio/MainListingPages.tsx";
+import PortfolioNos from "../../components/photo-portfolio/PortfolioNos.astro";
+
+const Nos = "noscript"; // keepin this stupid hack around!
+---
+
+<BaseLayout title="Photography">
+	<h2>Photography Portfolio</h2>
+	<p>
+		I take photos in my free time, of plants, interesting things on the street, birds, furries, whatever takes my
+		fancy.
+	</p>
+	<p>Feel free to explore my work!:</p>
+
+	<PortfolioNos />
+
+	<CategoryListing client:only="solid-js" />
+	<RollListing client:only="solid-js" />
+</BaseLayout>

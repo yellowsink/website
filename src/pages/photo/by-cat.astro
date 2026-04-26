@@ -1,0 +1,11 @@
+---
+import { ByCategoryWrapper } from "../../components/photo-portfolio/PhotoListingPage.tsx";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PortfolioNos from "../../components/photo-portfolio/PortfolioNos.astro";
+---
+
+<BaseLayout title="Photography">
+	<PortfolioNos />
+
+	<ByCategoryWrapper client:only="solid-js" />
+</BaseLayout>

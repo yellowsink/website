@@ -1,0 +1,11 @@
+---
+import { PhotoPage } from "../../components/photo-portfolio/PhotoView.tsx";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PortfolioNos from "../../components/photo-portfolio/PortfolioNos.astro";
+---
+
+<BaseLayout title="Photography">
+	<PortfolioNos />
+
+	<PhotoPage client:only="solid-js" />
+</BaseLayout>

@@ -45,9 +45,7 @@ export const getPhotoById = (id: number) =>
 export const photoUrlForId = (id: number) => `${BASE}/photo/${id}/file`;
 
 function modify(type: string, obj: Record<string, any> & { id: number }) {
-	const auth = new URLSearchParams(location.search).get("admin");
-
-	if (!auth) throw new Error("cannot modify photo without auth");
+	if (!authPassword) throw new Error(`cannot modify ${type} without auth`);
 
 	const params = new URLSearchParams();
 
@@ -56,12 +54,33 @@ function modify(type: string, obj: Record<string, any> & { id: number }) {
 		params.set(k, obj[k]);
 	}
 
-	return fetch(`${BASE}/${type}/${obj.id}${params}`, {
+	return fetch(`${BASE}/admin/${type}/${obj.id}?${params}`, {
 		method: "PATCH",
-		headers: { Authorization: btoa(`admin:${auth}`) },
+		headers: { Authorization: "Basic " + btoa(`admin:${authPassword}`) },
+		credentials: "include",
 	});
 }
 
 export const modifyPhoto = (photo: Partial<Photo> & { id: number }) => modify("photo", photo);
 
 export const modifyRoll = (roll: Partial<Roll> & { id: number }) => modify("roll", roll);
+
+export function deletePhoto(id: number) {
+	if (!authPassword) throw new Error("cannot delete photo without auth");
+
+	return fetch(`${BASE}/admin/photo/${id}`, {
+		method: "DELETE",
+		headers: { Authorization: "Basic " + btoa(`admin:${authPassword}`) },
+		credentials: "include",
+	});
+}
+
+export function deleteRoll(id: number) {
+	if (!authPassword) throw new Error("cannot delete roll without auth");
+
+	return fetch(`${BASE}/admin/roll/${id}`, {
+		method: "DELETE",
+		headers: { Authorization: "Basic " + btoa(`admin:${authPassword}`) },
+		credentials: "include",
+	});
+}

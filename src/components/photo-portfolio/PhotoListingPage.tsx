@@ -1,4 +1,4 @@
-import { photosForCategory, photosForRoll, type Roll, rolls } from "./data.ts";
+import { photosForCategory, photosForRoll, rolls } from "./data.ts";
 import { createMemo } from "solid-js";
 import { RawPhoto } from "./PhotoView.tsx";
 import { capitalize } from "./util.ts";

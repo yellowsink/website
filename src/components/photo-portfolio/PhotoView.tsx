@@ -1,5 +1,7 @@
-import { featuredCategories, getPhotoById, type Photo, photoUrlForId } from "./data.ts";
+import { authPassword, getPhotoById, type Photo, photoUrlForId } from "./data.ts";
 import { PhotoGrid } from "./PhotoListingPage.tsx";
+import { EditPhotoModal } from "./EditPhotoModal.tsx";
+import { createSignal } from "solid-js";
 
 export function RawPhoto(props: { photo: Photo; style?: string; class?: string }) {
 	return <img src={photoUrlForId(props.photo.id)} alt={props.photo.desc} style={props.style} class={props.class} />;
@@ -7,10 +9,12 @@ export function RawPhoto(props: { photo: Photo; style?: string; class?: string }
 
 // TODO: EXIF
 export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: () => void }) {
+	const [editModalOpen, setEditModalOpen] = createSignal(false);
+
 	return (
 		<div class="photo-view">
-			<h2>{props.photo.name ?? `Photo ${props.photo.id}`}</h2>
-			{props.photo.desc && <span>{props.photo.desc}</span>}
+			<h2>{props.photo.name || `Photo ${props.photo.id}`}</h2>
+			{props.photo.desc && <p>{props.photo.desc}</p>}
 
 			<div class="photo-wrapper">
 				<button onclick={props.goPrev} disabled={!props.goPrev}>
@@ -35,6 +39,10 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 				<span>Shutter Priority</span>
 				(wip, all this is fake rn)
 			</div>
+
+			{authPassword && <button onclick={() => setEditModalOpen(true)}>Edit data</button>}
+
+			<EditPhotoModal isOpen={editModalOpen()} onClose={() => setEditModalOpen(false)} photo={props.photo} />
 		</div>
 	);
 }

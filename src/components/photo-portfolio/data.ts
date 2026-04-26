@@ -25,7 +25,12 @@ export interface FeaturedCategory {
 
 const BASE = "https://photo-api.yellows.ink";
 
-export const authPassword = new URLSearchParams(location.search).get("auth");
+const authFromUrl = new URLSearchParams(location.search).get("auth");
+
+if (authFromUrl) localStorage.setItem("photo-auth", authFromUrl);
+if (authFromUrl === "CLEAR") localStorage.setItem("photo-auth", "");
+
+export const authPassword = localStorage.getItem("photo-auth");
 
 export const featuredCategories = createResource(() =>
 	fetch(`${BASE}/category/featured`).then((r) => r.json() as Promise<FeaturedCategory[]>),
@@ -92,5 +97,32 @@ export function addPhoto(roll: number, name: string, content: Blob) {
 		method: "POST",
 		headers: { Authorization: "Basic " + btoa(`admin:${authPassword}`) },
 		body: content,
+	});
+}
+
+export function addRoll(name: string) {
+	if (!authPassword) throw new Error("cannot add roll without auth");
+
+	return fetch(`${BASE}/admin/roll?name=${name}`, {
+		method: "POST",
+		headers: { Authorization: "Basic " + btoa(`admin:${authPassword}`) },
+	});
+}
+
+export function removeFeaturedCat(cat: string) {
+	if (!authPassword) throw new Error("cannot remove cat without auth");
+
+	return fetch(`${BASE}/admin/featuredcat/${cat}`, {
+		method: "DELETE",
+		headers: { Authorization: "Basic " + btoa(`admin:${authPassword}`) },
+	});
+}
+
+export function addFeaturedCat(cat: string, feature?: number) {
+	if (!authPassword) throw new Error("cannot add cat without auth");
+
+	return fetch(`${BASE}/admin/featuredcat/${cat}?feature=${feature || ""}`, {
+		method: "POST",
+		headers: { Authorization: "Basic " + btoa(`admin:${authPassword}`) },
 	});
 }

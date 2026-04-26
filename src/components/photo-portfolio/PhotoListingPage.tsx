@@ -40,8 +40,8 @@ export function PhotoListingPage(props: { roll?: number; category?: string }) {
 		<div>
 			<h2>
 				{props.roll
-					? `Photos in film roll: ${roll()?.name ?? "..."}`
-					: `Photos in category: ${capitalize(props.category)}`}
+					? `Photos in Film Roll: ${roll()?.name ?? "..."}`
+					: `Photos in Category: ${capitalize(props.category)}`}
 			</h2>
 
 			<PhotoGrid roll={props.roll} category={props.category} />

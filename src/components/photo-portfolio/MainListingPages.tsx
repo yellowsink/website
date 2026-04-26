@@ -14,7 +14,7 @@ export function RollListing() {
 				<ul>
 					{filmRolls().map((roll) => (
 						<li>
-							<span>{roll.dateadded}</span>
+							<span class="photo-date">{roll.dateadded.split(" ")[0]}</span>
 							<a href={`/photo/by-roll?roll=${roll.id}`}>{roll.name}</a>
 						</li>
 					))}

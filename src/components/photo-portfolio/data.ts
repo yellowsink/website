@@ -1,5 +1,4 @@
 import { createResource } from "solid-js";
-import { RollListing } from "./MainListingPages.tsx";
 
 export interface Roll {
 	id: number;
@@ -44,3 +43,25 @@ export const getPhotoById = (id: number) =>
 	createResource(() => fetch(`${BASE}/photo/${id}`).then((r) => r.json() as Promise<Photo>));
 
 export const photoUrlForId = (id: number) => `${BASE}/photo/${id}/file`;
+
+function modify(type: string, obj: Record<string, any> & { id: number }) {
+	const auth = new URLSearchParams(location.search).get("admin");
+
+	if (!auth) throw new Error("cannot modify photo without auth");
+
+	const params = new URLSearchParams();
+
+	for (const k in obj) {
+		if (k === "id") continue;
+		params.set(k, obj[k]);
+	}
+
+	return fetch(`${BASE}/${type}/${obj.id}${params}`, {
+		method: "PATCH",
+		headers: { Authorization: btoa(`admin:${auth}`) },
+	});
+}
+
+export const modifyPhoto = (photo: Partial<Photo> & { id: number }) => modify("photo", photo);
+
+export const modifyRoll = (roll: Partial<Roll> & { id: number }) => modify("roll", roll);

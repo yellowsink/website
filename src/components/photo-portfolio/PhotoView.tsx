@@ -33,6 +33,7 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 				<span>ISO 1600</span>
 				<span>2026-04-22 18:00</span>
 				<span>Shutter Priority</span>
+				(wip, all this is fake rn)
 			</div>
 		</div>
 	);

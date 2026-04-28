@@ -3,6 +3,7 @@ import { createMemo, createSignal } from "solid-js";
 import { RawPhoto } from "./PhotoView.tsx";
 import { capitalize } from "./util.ts";
 import { AddPhotosModal } from "./AddPhotosModal.tsx";
+import {EditRollModal} from "./EditRollModal.tsx";
 
 export function PhotoGrid(props: { roll?: number; category?: string }) {
 	const [allRolls] = rolls;
@@ -37,6 +38,7 @@ export function PhotoListingPage(props: { roll?: number; category?: string }) {
 	const [allRolls] = rolls;
 	const roll = () => allRolls()?.find((r) => r.id === props.roll);
 	const [addModalOpen, setAddModalOpen] = createSignal(false);
+	const [editModalOpen, setEditModalOpen] = createSignal(false);
 
 	return (
 		<div>
@@ -46,8 +48,12 @@ export function PhotoListingPage(props: { roll?: number; category?: string }) {
 					: `Photos in Category: ${capitalize(props.category)}`}
 			</h2>
 
-			{authPassword && props.roll && <button onclick={() => setAddModalOpen(true)}>Add Photos to Roll</button>}
+			{authPassword && props.roll && <>
+				<button onclick={() => setAddModalOpen(true)}>Add Photos to Roll</button>
+				<button onclick={() => setEditModalOpen(true)}>Edit data</button></>}
+
 			<AddPhotosModal isOpen={addModalOpen()} onClose={() => setAddModalOpen(false)} roll={props.roll} />
+			{roll() && <EditRollModal isOpen={editModalOpen()} onClose={() => setEditModalOpen(false)} roll={roll()}/>}
 
 			<PhotoGrid roll={props.roll} category={props.category} />
 		</div>

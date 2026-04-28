@@ -42,7 +42,7 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 							<em>f</em>/{ex.apertureSetting}
 						</span>
 					)}
-					{ex.focalLengthIn35mmFormat && <span>{ex.focalLengthIn35mmFormat}</span>}
+					{ex.focalLength && <span>{ex.focalLength}</span>}
 					{ex.iso && <span>ISO {ex.iso}</span>}
 					<span>{props.photo.datetaken}</span>
 					{ex.exposureProgram && <span>{ex.exposureProgram}</span>}

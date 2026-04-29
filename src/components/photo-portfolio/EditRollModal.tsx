@@ -29,6 +29,7 @@ export function EditRollModal(props: { isOpen: boolean; onClose: () => void; rol
 			<button onclick={props.onClose}>Close</button>
 			<EditBoxRow starting={props.roll.dateadded} key="dateadded" id={props.roll.id} />
 			<EditBoxRow starting={props.roll.name} key="name" id={props.roll.id} />
+			<EditBoxRow starting={props.roll.desc} key="desc" id={props.roll.id} />
 
 			<button onclick={() => deleteRoll(props.roll.id)}>Delete roll</button>
 		</dialog>

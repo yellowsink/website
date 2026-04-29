@@ -3,6 +3,7 @@ import { createResource } from "solid-js";
 export interface Roll {
 	id: number;
 	name: string | null;
+	desc: string | null;
 	dateadded: string;
 }
 

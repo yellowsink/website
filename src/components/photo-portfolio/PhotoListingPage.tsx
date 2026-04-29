@@ -1,9 +1,20 @@
-import { authPassword, photosForCategory, photosForRoll, rolls } from "./data.ts";
+import { authPassword, type Photo, photosForCategory, photosForRoll, rolls } from "./data.ts";
 import { createMemo, createSignal } from "solid-js";
 import { RawPhoto } from "./PhotoView.tsx";
 import { capitalize } from "./util.ts";
 import { AddPhotosModal } from "./AddPhotosModal.tsx";
 import {EditRollModal} from "./EditRollModal.tsx";
+import { differenceInSeconds } from "date-fns";
+
+export function sortPhotos(photos: Photo[]) {
+	const faved = photos.filter(p => p.is_fave);
+	const others = photos.filter(p => !p.is_fave);
+
+	faved.sort((a, b) => differenceInSeconds(a.datetaken, b.datetaken));
+	others.sort((a, b) => differenceInSeconds(a.datetaken, b.datetaken));
+
+	return [...faved, ...others];
+}
 
 export function PhotoGrid(props: { roll?: number; category?: string }) {
 	const [allRolls] = rolls;
@@ -23,11 +34,12 @@ export function PhotoGrid(props: { roll?: number; category?: string }) {
 				"Loading photos..."
 			) : (
 				<div class="photo-listing-grid">
-					{photosResource()().map((p) => (
-						<a href={`/photo/photo?p=${p.id}${urlAddon}`}>
-							<RawPhoto photo={p} />
-						</a>
-					))}
+					{sortPhotos(photosResource()())
+						.map((p) => (
+							<a href={`/photo/photo?p=${p.id}${urlAddon}`}>
+								<RawPhoto photo={p} />
+							</a>
+						))}
 				</div>
 			)}
 		</div>

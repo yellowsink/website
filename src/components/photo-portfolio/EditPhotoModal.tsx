@@ -27,12 +27,11 @@ export function EditPhotoModal(props: { isOpen: boolean; onClose: () => void; ph
 	return (
 		<dialog ref={modalEl}>
 			<button onclick={props.onClose}>Close</button>
-			<EditBoxRow starting={props.photo.datetaken} key="datetaken" id={props.photo.id} />
-			<EditBoxRow starting={props.photo.dateadded} key="dateadded" id={props.photo.id} />
+			<EditBoxRow starting={props.photo.datetaken} key="taken" id={props.photo.id} />
 			<EditBoxRow starting={props.photo.name} key="name" id={props.photo.id} />
 			<EditBoxRow starting={props.photo.desc} key="desc" id={props.photo.id} />
 			<EditBoxRow starting={props.photo.categories} key="categories" id={props.photo.id} />
-			<EditBoxRow starting={props.photo.is_fave ? "true" : "false"} key="is_fave" id={props.photo.id} />
+			<EditBoxRow starting={props.photo.is_fave ? "true" : "false"} key="fave" id={props.photo.id} />
 
 			<button onclick={() => deletePhoto(props.photo.id)}>Delete photo</button>
 		</dialog>

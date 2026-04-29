@@ -1,15 +1,18 @@
-import {authPassword, getPhotoById, type Photo, photoUrlForId} from "./data.ts";
-import {PhotoGrid} from "./PhotoListingPage.tsx";
-import {EditPhotoModal} from "./EditPhotoModal.tsx";
-import {createSignal} from "solid-js";
-import {capitalize} from "./util.ts";
+import { authPassword, getPhotoById, type Photo, photoUrlForId, rolls } from "./data.ts";
+import { PhotoGrid } from "./PhotoListingPage.tsx";
+import { EditPhotoModal } from "./EditPhotoModal.tsx";
+import { createMemo, createSignal } from "solid-js";
+import { capitalize } from "./util.ts";
 
 export function RawPhoto(props: { photo: Photo; style?: string; class?: string }) {
-	return <img src={photoUrlForId(props.photo.id)} alt={props.photo.desc} style={props.style} class={props.class}/>;
+	return <img src={photoUrlForId(props.photo.id)} alt={props.photo.desc} style={props.style} class={props.class} />;
 }
 
 // TODO: EXIF
 export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: () => void }) {
+	const [allRolls] = rolls;
+	const roll = createMemo(() => allRolls()?.find((r) => r.id === props.photo.roll));
+
 	const [editModalOpen, setEditModalOpen] = createSignal(false);
 
 	const ex = props.photo.exif ? JSON.parse(props.photo.exif) : undefined;
@@ -17,21 +20,38 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 	return (
 		<div class="photo-view">
 			<h2>{props.photo.name || `Photo`}</h2>
-			{props.photo.desc && <p>{props.photo.desc}</p>}
 
-			<p><a href={`/photo/by-roll?roll=${props.photo.roll}`}>View Film Roll</a>; Categories:{" "}
-				{props.photo.categories.split(",").filter(c => c).map((cat, i, arr) =>
-					<><a
-						href={`/photo/by-category?${new URLSearchParams({cat})}`}>{capitalize(cat)}</a>
-						{i + 1 === arr.length ? `` : `, `}
-					</>)}
+			<p>
+				<span class="photo-date" style="margin-right: unset">
+					Taken {props.photo.datetaken};
+				</span>
+				{" "}
+				{roll()?.name ? (
+					<>
+						Film Roll: <a href={`/photo/by-roll?roll=${props.photo.roll}`}>{roll().name}</a>
+					</>
+				) : (
+					<a href={`/photo/by-roll?roll=${props.photo.roll}`}>View Film Roll</a>
+				)}
+				; Categories:{" "}
+				{props.photo.categories
+					.split(",")
+					.filter((c) => c)
+					.map((cat, i, arr) => (
+						<>
+							<a href={`/photo/by-category?${new URLSearchParams({ cat })}`}>{capitalize(cat)}</a>
+							{i + 1 === arr.length ? `` : `, `}
+						</>
+					))}
 			</p>
+
+			{props.photo.desc && <p>{props.photo.desc}</p>}
 
 			<div class="photo-wrapper">
 				{/*<button onclick={props.goPrev} disabled={!props.goPrev}>
 					&lt;
 				</button>*/}
-				<RawPhoto photo={props.photo} class="the-photo"/>
+				<RawPhoto photo={props.photo} class="the-photo" />
 				{/*	<button onclick={props.goNext} disabled={!props.goNext}>
 					&gt;
 				</button>*/}
@@ -53,18 +73,21 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 					)}
 					{ex.focalLength && <span>{ex.focalLength}</span>}
 					{ex.iso && <span>ISO {ex.iso}</span>}
-					<span>{props.photo.datetaken}</span>
-					{ex.exposureProgram && <span>{{
-						"Program AE": "Auto",
-						"Shutter speed priority AE": "Shutter Priority",
-						"Aperture-priority AE": "Aperture Priority"
-					}[ex.exposureProgram] ?? ex.exposureProgram}</span>}
+					{ex.exposureProgram && (
+						<span>
+							{{
+								"Program AE": "Auto",
+								"Shutter speed priority AE": "Shutter Priority",
+								"Aperture-priority AE": "Aperture Priority",
+							}[ex.exposureProgram] ?? ex.exposureProgram}
+						</span>
+					)}
 				</div>
 			)}
 
 			{authPassword && <button onclick={() => setEditModalOpen(true)}>Edit data</button>}
 
-			<EditPhotoModal isOpen={editModalOpen()} onClose={() => setEditModalOpen(false)} photo={props.photo}/>
+			<EditPhotoModal isOpen={editModalOpen()} onClose={() => setEditModalOpen(false)} photo={props.photo} />
 		</div>
 	);
 }
@@ -87,10 +110,10 @@ export function PhotoPage() {
 				"Loading photo..."
 			) : (
 				<>
-					<PhotoView photo={photo()}/>
+					<PhotoView photo={photo()} />
 
 					{!isNaN(rollId) || featuredCategory ? (
-						<PhotoGrid roll={isNaN(rollId) ? undefined : rollId} category={featuredCategory}/>
+						<PhotoGrid roll={isNaN(rollId) ? undefined : rollId} category={featuredCategory} />
 					) : (
 						""
 					)}

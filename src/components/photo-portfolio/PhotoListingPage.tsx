@@ -7,7 +7,7 @@ import {EditRollModal} from "./EditRollModal.tsx";
 
 export function PhotoGrid(props: { roll?: number; category?: string }) {
 	const [allRolls] = rolls;
-	const roll = () => allRolls()?.find((r) => r.id === props.roll);
+	const roll = createMemo(() => allRolls()?.find((r) => r.id === props.roll));
 
 	const photosResource = createMemo(() => {
 		if (props.roll) return photosForRoll(roll()?.id)[0];
@@ -36,7 +36,7 @@ export function PhotoGrid(props: { roll?: number; category?: string }) {
 
 export function PhotoListingPage(props: { roll?: number; category?: string }) {
 	const [allRolls] = rolls;
-	const roll = () => allRolls()?.find((r) => r.id === props.roll);
+	const roll = createMemo(() => allRolls()?.find((r) => r.id === props.roll));
 	const [addModalOpen, setAddModalOpen] = createSignal(false);
 	const [editModalOpen, setEditModalOpen] = createSignal(false);
 

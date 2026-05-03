@@ -1,7 +1,7 @@
 import { authPassword, type Photo, photosForCategory, photosForRoll, rolls } from "./data.ts";
 import { createMemo, createSignal } from "solid-js";
 import { RawPhoto } from "./PhotoView.tsx";
-import { capitalize } from "./util.ts";
+import {addLineBreaks, capitalize} from "./util.tsx";
 import { AddPhotosModal } from "./AddPhotosModal.tsx";
 import {EditRollModal} from "./EditRollModal.tsx";
 import { differenceInSeconds } from "date-fns";
@@ -61,7 +61,7 @@ export function PhotoListingPage(props: { roll?: number; category?: string }) {
 			</h2>
 
 			{roll() && <p class="photo-date">Added {roll().dateadded}</p>}
-			{roll()?.desc && <p>{roll().desc}</p>}
+			{roll()?.desc && <p>{addLineBreaks(roll().desc)}</p>}
 
 			{authPassword && props.roll && (
 				<>

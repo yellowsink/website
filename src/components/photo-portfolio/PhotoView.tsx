@@ -2,7 +2,7 @@ import { authPassword, getPhotoById, type Photo, photoUrlForId, rolls } from "./
 import { PhotoGrid } from "./PhotoListingPage.tsx";
 import { EditPhotoModal } from "./EditPhotoModal.tsx";
 import { createMemo, createSignal } from "solid-js";
-import { capitalize } from "./util.ts";
+import { capitalize } from "./util.tsx";
 
 export function RawPhoto(props: { photo: Photo; style?: string; class?: string }) {
 	return <img src={photoUrlForId(props.photo.id)} alt={props.photo.desc} style={props.style} class={props.class} />;

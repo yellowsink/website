@@ -12,6 +12,17 @@ function EditBoxRow(props: { starting: string; key: string; id: number }) {
 	);
 }
 
+function EditAreaRow(props: { starting: string; key: string; id: number }) {
+	const [current, setCurrent] = createSignal(props.starting);
+
+	return (
+		<div class="photo-edit-row">
+			<textarea value={current()} onchange={(e) => setCurrent(e.target.value)} />
+			<button onclick={() => modifyRoll({ id: props.id, [props.key]: current() })}>Change {props.key}</button>
+		</div>
+	);
+}
+
 export function EditRollModal(props: { isOpen: boolean; onClose: () => void; roll: Roll }) {
 	let modalEl: HTMLDialogElement;
 
@@ -29,7 +40,7 @@ export function EditRollModal(props: { isOpen: boolean; onClose: () => void; rol
 			<button onclick={props.onClose}>Close</button>
 			<EditBoxRow starting={props.roll.dateadded} key="dateadded" id={props.roll.id} />
 			<EditBoxRow starting={props.roll.name} key="name" id={props.roll.id} />
-			<EditBoxRow starting={props.roll.desc} key="desc" id={props.roll.id} />
+			<EditAreaRow starting={props.roll.desc} key="desc" id={props.roll.id} />
 
 			<button onclick={() => deleteRoll(props.roll.id)}>Delete roll</button>
 		</dialog>

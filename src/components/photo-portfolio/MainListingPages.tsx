@@ -7,7 +7,7 @@ import {
 	removeFeaturedCat,
 	rolls,
 } from "./data.ts";
-import { capitalize } from "./util.ts";
+import { capitalize } from "./util.tsx";
 import { createSignal } from "solid-js";
 
 export function RollListing() {

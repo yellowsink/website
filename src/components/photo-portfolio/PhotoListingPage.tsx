@@ -56,8 +56,8 @@ export function PhotoListingPage(props: { roll?: number; category?: string }) {
 		<div>
 			<h2>
 				{props.roll
-					? `Photos in Film Roll: ${roll()?.name ?? "..."}`
-					: `Photos in Category: ${capitalize(props.category)}`}
+					? roll()?.name ?? "..."
+					: `Category: ${capitalize(props.category)}`}
 			</h2>
 
 			{roll() && <p class="photo-date">Added {roll().dateadded}</p>}

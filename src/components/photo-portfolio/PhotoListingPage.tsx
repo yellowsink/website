@@ -37,7 +37,7 @@ export function PhotoGrid(props: { roll?: number; category?: string }) {
 					{sortPhotos(photosResource()())
 						.map((p) => (
 							<a href={`/photo/photo?p=${p.id}${urlAddon}`}>
-								<RawPhoto photo={p} />
+								<RawPhoto photo={p} thumb />
 							</a>
 						))}
 				</div>

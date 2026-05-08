@@ -49,7 +49,7 @@ export const photosForCategory = (name: string) =>
 export const getPhotoById = (id: number) =>
 	createResource(() => fetch(`${BASE}/photo/${id}`).then((r) => r.json() as Promise<Photo>));
 
-export const photoUrlForId = (id: number) => `${BASE}/photo/${id}/file`;
+export const photoUrlForId = (id: number, isThumb = false) => `${BASE}/photo/${id}/${isThumb ? 'thumbnail' : 'file'}`;
 
 function modify(type: string, obj: Record<string, any> & { id: number }) {
 	if (!authPassword) throw new Error(`cannot modify ${type} without auth`);

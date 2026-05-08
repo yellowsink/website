@@ -4,11 +4,20 @@ import { EditPhotoModal } from "./EditPhotoModal.tsx";
 import { createMemo, createSignal } from "solid-js";
 import { capitalize } from "./util.tsx";
 
-export function RawPhoto(props: { photo: Photo; style?: string; class?: string }) {
-	return <img src={photoUrlForId(props.photo.id)} alt={props.photo.desc} style={props.style} class={props.class} />;
+export function RawPhoto(props: { photo: Photo; thumb?: boolean; style?: string; class?: string }) {
+	return <img src={photoUrlForId(props.photo.id, props.thumb)} alt={props.photo.desc} style={props.style} class={props.class} />;
 }
 
-// TODO: EXIF
+export function StackedPhoto(props: { photo: Photo }) {
+	const exif = props.photo.exif && JSON.parse(props.photo.exif);
+	const aspectRatio = exif && exif.imageWidth / exif.imageHeight;
+
+	return <div class="stacked-photo-wrap" style={{ "aspect-ratio": aspectRatio }}>
+		<img src={photoUrlForId(props.photo.id, true)} alt={props.photo.desc} />
+		<img alt="" class="stacked-photo-driven" src={photoUrlForId(props.photo.id)} />
+	</div>;
+}
+
 export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: () => void }) {
 	const [allRolls] = rolls;
 	const roll = createMemo(() => allRolls()?.find((r) => r.id === props.photo.roll));
@@ -48,10 +57,12 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 			{props.photo.desc && <p>{props.photo.desc}</p>}
 
 			<div class="photo-wrapper">
+				<div />
 				{/*<button onclick={props.goPrev} disabled={!props.goPrev}>
 					&lt;
 				</button>*/}
-				<RawPhoto photo={props.photo} class="the-photo" />
+				<StackedPhoto photo={props.photo} />
+				<div />
 				{/*	<button onclick={props.goNext} disabled={!props.goNext}>
 					&gt;
 				</button>*/}

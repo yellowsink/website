@@ -21,7 +21,7 @@ export function AddPhotosModal(props: { isOpen: boolean; onClose: () => void; ro
 			<input
 				type="file"
 				multiple
-				accept="image/png, image/jpeg, image/webp"
+				accept="image/png, image/jpeg, image/webp, image/avif, image/jxl"
 				onchange={async (ev) => {
 					setDisplayProgress(0);
 					const files = ev.target.files;

@@ -2,10 +2,13 @@
 import { PhotoPage } from "../../components/photo-portfolio/PhotoView.tsx";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PortfolioNos from "../../components/photo-portfolio/PortfolioNos.astro";
+import AvifTest from "../../components/photo-portfolio/AvifTest.tsx";
 ---
 
 <BaseLayout title="Photography">
 	<PortfolioNos />
+
+	<AvifTest client:only="solid-js" />
 
 	<PhotoPage client:only="solid-js" />
 </BaseLayout>

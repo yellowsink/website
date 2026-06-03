@@ -7,7 +7,7 @@ import {
 	removeFeaturedCat,
 	rolls,
 } from "./data.ts";
-import { capitalize } from "./util.tsx";
+import { capitalize, sortRolls } from "./util.tsx";
 import { createSignal } from "solid-js";
 
 export function RollListing() {
@@ -22,7 +22,7 @@ export function RollListing() {
 				"Loading, please wait..."
 			) : (
 				<ul>
-					{filmRolls().map((roll) => (
+					{sortRolls(filmRolls()).map((roll) => (
 						<li>
 							{authPassword && (
 								<button onclick={() => deleteRoll(roll.id).then(() => location.reload())}>Delete</button>

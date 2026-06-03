@@ -1,20 +1,9 @@
-import { authPassword, type Photo, photosForCategory, photosForRoll, rolls } from "./data.ts";
+import { authPassword, photosForCategory, photosForRoll, rolls } from "./data.ts";
 import { createMemo, createSignal } from "solid-js";
 import { RawPhoto } from "./PhotoView.tsx";
-import {addLineBreaks, capitalize} from "./util.tsx";
+import { addLineBreaks, capitalize, sortPhotos } from "./util.tsx";
 import { AddPhotosModal } from "./AddPhotosModal.tsx";
 import {EditRollModal} from "./EditRollModal.tsx";
-import { differenceInSeconds } from "date-fns";
-
-export function sortPhotos(photos: Photo[]) {
-	const faved = photos.filter(p => p.is_fave);
-	const others = photos.filter(p => !p.is_fave);
-
-	faved.sort((a, b) => differenceInSeconds(a.datetaken, b.datetaken));
-	others.sort((a, b) => differenceInSeconds(a.datetaken, b.datetaken));
-
-	return [...faved, ...others];
-}
 
 export function PhotoGrid(props: { roll?: number; category?: string }) {
 	const [allRolls] = rolls;

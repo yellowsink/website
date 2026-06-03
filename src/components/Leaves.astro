@@ -19,6 +19,8 @@
 			setTimeout(
 				() =>
 					setInterval(() => {
+						if (!document.hasFocus()) return; // stop spawning leaves when not being looked at
+
 						const leafel = document.createElement("img");
 						leafel.src = LEAVES[~~(Math.random() * LEAVES.length)];
 						leafel.style.cssText =

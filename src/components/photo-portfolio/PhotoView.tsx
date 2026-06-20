@@ -1,4 +1,4 @@
-import { authPassword, getPhotoById, type Photo, photoUrlForId, rolls } from "./data.ts";
+import {authPassword, getPhotoById, type Photo, photosForRoll, photoUrlForId, rolls} from "./data.ts";
 import { PhotoGrid } from "./PhotoListingPage.tsx";
 import { EditPhotoModal } from "./EditPhotoModal.tsx";
 import { createMemo, createSignal } from "solid-js";
@@ -57,15 +57,13 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 			{props.photo.desc && <p>{props.photo.desc}</p>}
 
 			<div class="photo-wrapper">
-				<div />
-				{/*<button onclick={props.goPrev} disabled={!props.goPrev}>
+				<button onclick={props.goPrev} disabled={!props.goPrev}>
 					&lt;
-				</button>*/}
+				</button>
 				<StackedPhoto photo={props.photo} />
-				<div />
-				{/*	<button onclick={props.goNext} disabled={!props.goNext}>
+				<button onclick={props.goNext} disabled={!props.goNext}>
 					&gt;
-				</button>*/}
+				</button>
 			</div>
 
 			{ex && (
@@ -109,19 +107,37 @@ export function PhotoPage() {
 	const featuredCategory = new URLSearchParams(location.search).get("cat");
 
 	// important bit
-	const photoId = Number(new URLSearchParams(location.search).get("p"));
+	const [photoId, setPhotoId] = createSignal(Number(new URLSearchParams(location.search).get("p")));
 
-	if (!photoId) return "Missing photo ID";
+	if (!photoId()) return "Missing photo ID";
 
-	const [photo] = getPhotoById(photoId);
+	// get all photos (only works for rolls rn)
+	const [allRolls] = rolls;
+	const roll = createMemo(() => allRolls()?.find((r) => r.id === rollId));
+	const rollPhotosRes = createMemo(() => photosForRoll(roll()?.id)[0]);
+
+	// find photo and next and previous IDs
+	const photoData = createMemo(() => {
+		const photos = rollPhotosRes()();
+		const idx = photos?.findIndex(p => p.id === photoId());
+		if (idx === undefined || idx < 0) return { loading: true } as const;
+
+		return { photo: photos[idx], next: photos[idx + 1]?.id, prev: photos[idx-1]?.id } as const;
+	});
+
+	const goTo = (id: number) => {
+		setPhotoId(id);
+		history.pushState(null, "", `/photo/photo?p=${photoId()}${featuredCategory ? `&cat=${featuredCategory}` : ''}${isNaN(rollId) ? '' : `&roll=${rollId}`}`);
+	};
 
 	return (
 		<>
-			{photo.loading ? (
+			{photoData().loading ? (
 				"Loading photo..."
 			) : (
 				<>
-					<PhotoView photo={photo()} />
+					<PhotoView photo={photoData().photo} goNext={() => goTo(photoData().next)}
+					           goPrev={() => goTo(photoData().prev)}/>
 
 					{!isNaN(rollId) || featuredCategory ? (
 						<PhotoGrid roll={isNaN(rollId) ? undefined : rollId} category={featuredCategory} />

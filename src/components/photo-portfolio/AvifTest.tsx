@@ -1,12 +1,13 @@
 import {createResource} from "solid-js";
+import {decode} from "base32768";
 
 async function supportsAvif() {
-	if (!this.createImageBitmap) return false;
+	if (!window.createImageBitmap) return false;
 
-	const avifData = `data:image/avif;base64,AAAAFGZ0eXBhdmlmAAAAAG1pZjEAAACgbWV0YQAAAAAAAAAOcGl0bQAAAAAAAQAAAB5pbG9jAAAAAEQAAAEAAQAAAAEAAAC8AAAAGwAAACNpaW5mAAAAAAABAAAAFWluZmUCAAAAAAEAAGF2MDEAAAAARWlwcnAAAAAoaXBjbwAAABRpc3BlAAAAAAAAAAQAAAAEAAAADGF2MUOBAAAAAAAAFWlwbWEAAAAAAAAAAQABAgECAAAAI21kYXQSAAoIP8R8hAQ0BUAyDWeeUy0JG+QAACANEkA=`;
-	const blob = await fetch(avifData).then((r) => r.blob());
+	const avifData = `ҠҧⲎ混ᒋ者牠ҠԖ肹沌㶦熓尅椬Ҡڴ䆙哬㙀ҠҠҠ䞨墖䋀ҠҠҠҡ蜲觔ҠҠҠҠҠҠҠҠұ䂛㐬噠ҠႱҠႠݠҠҠ㜀ҨҠҠҠҰҠҤ島燓㹀ҠҠݠҠᐭ㴦妈■ҠҡҠ㺝汦㙀Ҡԙ蜲髍ҠҠҠ㙀ң䟥蝄陠Ҡ㢚呬嵐Ҡԑ楌垣曰ݠҠҡ䅛搑謼觌扠ڀᇠҨҠҠ伲駐壠ҠҠҠҨҠҢҠҧ䉚啭㙀ҠҤ㙀Ҡ⨴艻劀ҠҠҠҢҡጠ曠蛠Ҡᄣ寱楈㡀ᛃ瑠ߊႭұ溬䙀Ҡ▜䨙鑵忂軠鹮挌驐`;
+	const blob = new Blob([decode(avifData)], { type: "image/avif" });
 
-	return createImageBitmap(blob).then(() => true, () => false);
+	return createImageBitmap(blob).then((b) => true, () => false);
 }
 
 export default () => {

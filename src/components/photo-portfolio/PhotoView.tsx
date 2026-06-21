@@ -8,13 +8,13 @@ export function RawPhoto(props: { photo: Photo; thumb?: boolean; style?: string;
 	return <img src={photoUrlForId(props.photo.id, props.thumb)} alt={props.photo.desc} style={props.style} class={props.class} />;
 }
 
-export function StackedPhoto(props: { photo: Photo }) {
+export function StackedPhoto(props: { photo: Photo, hideFull?: boolean }) {
 	const exif = props.photo.exif && JSON.parse(props.photo.exif);
 	const aspectRatio = exif && exif.imageWidth / exif.imageHeight;
 
 	return <div class="stacked-photo-wrap" style={{ "aspect-ratio": aspectRatio }}>
 		<img src={photoUrlForId(props.photo.id, true)} alt={props.photo.desc} />
-		<img alt="" class="stacked-photo-driven" src={photoUrlForId(props.photo.id)} />
+		{!props.hideFull && <img alt="" class="stacked-photo-driven" src={photoUrlForId(props.photo.id)} />}
 	</div>;
 }
 
@@ -24,6 +24,13 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 	const [editModalOpen, setEditModalOpen] = createSignal(false);
 
 	const ex = props.photo.exif ? JSON.parse(props.photo.exif) : undefined;
+
+	// blank full size image when navigating to prevent the old one sticking for too long and feeling sluggish
+	const [hideFull, setHideFull] = createSignal(false);
+	const triggerHideFull = () => {
+		setHideFull(true);
+		setTimeout(() => setHideFull(false), 30);
+	}
 
 	return (
 		<div class="photo-view">
@@ -56,11 +63,11 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 			{props.photo.desc && <p>{props.photo.desc}</p>}
 
 			<div class="photo-wrapper">
-				<button onclick={props.goPrev} disabled={!props.goPrev}>
+				<button onclick={() => (props.goPrev(), triggerHideFull())} disabled={!props.goPrev}>
 					&lt;
 				</button>
-				<StackedPhoto photo={props.photo} />
-				<button onclick={props.goNext} disabled={!props.goNext}>
+				<StackedPhoto photo={props.photo} hideFull={hideFull()} />
+				<button onclick={() => (props.goNext(), triggerHideFull())} disabled={!props.goNext}>
 					&gt;
 				</button>
 			</div>

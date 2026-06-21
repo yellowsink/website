@@ -13,22 +13,10 @@ export function addLineBreaks(rawStr: string) {
 	return [...lines[0], lines.slice(1).flatMap((line) => [<br />, line])];
 }
 
-export function sortByDateInPlace<T>(array: T[], sel: (t: T) => string) {
-	array.sort((a, b) => differenceInSeconds(sel(a), sel(b)));
+function sortByDate<T>(array: T[], sel: (t: T) => string) {
+	return array.toSorted((a, b) => differenceInSeconds(sel(a), sel(b)));
 }
 
-export function sortPhotos(photos: Photo[]) {
-	const faved = photos.filter((p) => p.is_fave);
-	const others = photos.filter((p) => !p.is_fave);
+export const sortPhotos = (photos: Photo[]) => sortByDate(photos, (p) => p.datetaken);
 
-	sortByDateInPlace(faved, (p) => p.datetaken);
-	sortByDateInPlace(others, (p) => p.datetaken);
-
-	return [...faved, ...others];
-}
-
-export function sortRolls(rolls: Roll[]) {
-	const rollsc = [...rolls];
-	sortByDateInPlace(rollsc, (r) => r.dateadded);
-	return rollsc;
-}
+export const sortRolls = (rolls: Roll[]) => sortByDate(rolls, (r) => r.dateadded);

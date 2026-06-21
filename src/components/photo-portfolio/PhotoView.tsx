@@ -6,7 +6,7 @@ import {
 	useRollById,
 	useRollOrCategoryPhotos,
 } from "./data.tsx";
-import { PhotoGrid } from "./PhotoListingPage.tsx";
+import { PhotoGridsWithFaves } from "./PhotoListingPage.tsx";
 import { EditPhotoModal } from "./EditPhotoModal.tsx";
 import { createMemo, createSignal, onCleanup } from "solid-js";
 import { capitalize, sortPhotos } from "./util.tsx";
@@ -189,7 +189,7 @@ function PhotoPageInner() {
 					/>
 
 					{!isNaN(rollId) || featuredCategory ? (
-						<PhotoGrid roll={isNaN(rollId) ? undefined : rollId} category={featuredCategory} />
+						<PhotoGridsWithFaves roll={isNaN(rollId) ? undefined : rollId} category={featuredCategory} />
 					) : (
 						""
 					)}

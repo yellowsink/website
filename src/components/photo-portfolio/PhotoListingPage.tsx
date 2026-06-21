@@ -1,11 +1,11 @@
 import { isAuthed, TanstackProvider, useRollById, useRollOrCategoryPhotos } from "./data.tsx";
-import { createSignal } from "solid-js";
+import { createMemo, createSignal } from "solid-js";
 import { RawPhoto } from "./PhotoView.tsx";
 import { addLineBreaks, capitalize, sortPhotos } from "./util.tsx";
 import { AddPhotosModal } from "./AddPhotosModal.tsx";
 import { EditRollModal } from "./EditRollModal.tsx";
 
-export function PhotoGrid(props: { roll?: number; category?: string }) {
+export function PhotoGrid(props: { roll?: number; category?: string, faves?: boolean }) {
 	const photos = useRollOrCategoryPhotos(
 		() => !props.roll,
 		() => props.roll || props.category,
@@ -19,7 +19,7 @@ export function PhotoGrid(props: { roll?: number; category?: string }) {
 				"Loading photos..."
 			) : (
 				<div class="photo-listing-grid">
-					{sortPhotos(photos.data).map((p) => (
+					{sortPhotos(photos.data).filter(p => !props.faves || p.is_fave).map((p) => (
 						<a href={`/photo/photo?p=${p.id}${urlAddon}`}>
 							<RawPhoto photo={p} thumb />
 						</a>
@@ -28,6 +28,24 @@ export function PhotoGrid(props: { roll?: number; category?: string }) {
 			)}
 		</div>
 	);
+}
+
+export function PhotoGridsWithFaves(props: {roll?: number, category?: string }) {
+	const listingQuery = useRollOrCategoryPhotos(
+		() => !props.roll,
+		() => props.roll || props.category,
+	);
+	const areAnyFaves = createMemo(() => !!listingQuery.data?.find(p => p.is_fave));
+
+	return (<>
+		{areAnyFaves() && (<>
+			<h3>Picks</h3>
+			<PhotoGrid roll={props.roll} category={props.category} faves />
+			<h3>All Photos</h3>
+		</>)}
+
+		<PhotoGrid roll={props.roll} category={props.category} />
+	</>)
 }
 
 export function PhotoListingPage(props: { roll?: number; category?: string }) {
@@ -52,7 +70,7 @@ export function PhotoListingPage(props: { roll?: number; category?: string }) {
 			<AddPhotosModal isOpen={addModalOpen()} onClose={() => setAddModalOpen(false)} roll={props.roll} />
 			{roll() && <EditRollModal isOpen={editModalOpen()} onClose={() => setEditModalOpen(false)} roll={roll()} />}
 
-			<PhotoGrid roll={props.roll} category={props.category} />
+			<PhotoGridsWithFaves roll={props.roll} category={props.category} />
 		</div>
 	);
 }

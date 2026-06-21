@@ -23,6 +23,7 @@
 		img
 			width: 100%
 			z-index: 5 // leaves are 2
+			position: relative // z-index won't work with position: static
 
 		.stacked-photo-driven
 			position: absolute
@@ -36,6 +37,9 @@
 	color: inherit
 	font-size: 1.5rem
 	height: 100%
+
+	&:disabled
+		visibility: hidden
 
 .exif-tags > span
 	display: inline-block

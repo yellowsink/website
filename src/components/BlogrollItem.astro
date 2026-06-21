@@ -9,7 +9,5 @@ const { name, url, feed, details } = Astro.props;
 
 	<a href={url}>{name}</a><!-- {details && `: ${details}`} -->
 
-	{details && (
-		<div style="margin-left: 2rem; opacity: 0.7">{details}</div>
-	)}
+	{details && <div style="margin-left: 2rem; opacity: 0.7">{details}</div>}
 </li>

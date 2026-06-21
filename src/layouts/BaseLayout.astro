@@ -31,7 +31,8 @@ const fullTitle = title ? `Sink's place - ${title}` : "Sink's place";
 		<Sidebar {routes} currentPath={Astro.url.pathname} />
 		<main
 			id="content"
-			class=":uno: p-18 bg-#f1f3f5 dark:bg-#222 flex-1 font-prose md:ml-80 xl:ml-120 text-text dark:text-text-dark transition-colors">
+			class=":uno: p-18 bg-#f1f3f5 dark:bg-#222 flex-1 font-prose md:ml-80 xl:ml-120 text-text dark:text-text-dark transition-colors"
+		>
 			<slot />
 		</main>
 

@@ -1,27 +1,107 @@
 {
 	"blogsIRead": [
-		["Bartosz Chiechanowski", "https://ciechanow.ski", "/atom.xml", "Beautiful interactive and visual explanations of how things work."],
-		["Bits About Money", "https://www.bitsaboutmoney.com/archive", "/rss", "An interesting window into how modern financial systems work and why."],
-		["Carlos Fenollosa", "https://cfenollosa.com/blog/index.html", "http://feeds.feedburner.com/WaitingForTheJobsToFinish", "Some interesting thoughts on AI, self hosting, tech products, and social media."],
-		["fasterthanlime", "https://fasterthanli.me", "/index.xml", "Fantastic articles about what Amos is doing and explaining software related topics"],
+		[
+			"Bartosz Chiechanowski",
+			"https://ciechanow.ski",
+			"/atom.xml",
+			"Beautiful interactive and visual explanations of how things work."
+		],
+		[
+			"Bits About Money",
+			"https://www.bitsaboutmoney.com/archive",
+			"/rss",
+			"An interesting window into how modern financial systems work and why."
+		],
+		[
+			"Carlos Fenollosa",
+			"https://cfenollosa.com/blog/index.html",
+			"http://feeds.feedburner.com/WaitingForTheJobsToFinish",
+			"Some interesting thoughts on AI, self hosting, tech products, and social media."
+		],
+		[
+			"fasterthanlime",
+			"https://fasterthanli.me",
+			"/index.xml",
+			"Fantastic articles about what Amos is doing and explaining software related topics"
+		],
 		["Faultlore", "https://faultlore.com/blah", "/rss.xml", "Very nerdy and in depth articles about computers"],
-		["Halimede", "https://halimedemf.substack.com", "/feed", "Is there such a thing as a lawful good chaser? I don't know, but Halimede has some truly good writings on gender and sexuality, especially surrounding trans women."],
-		["James Sinclair", "https://jrsinclair.com", "/index.rss", "Web dev, FP and philosophy. I may not be religious but I respect his work, and this is also one of the most beautiful websites I've laid eyes upon."],
-		["maia arson crimew", "https://maia.crimew.gay/posts", "../feed.xml", "Does maia need introduction? Probably not but I'll do it anyway. maia does hacktivism, investigative journalism, and generally cool shit. Highlight on the #FuckStalkerware series!"],
+		[
+			"Halimede",
+			"https://halimedemf.substack.com",
+			"/feed",
+			"Is there such a thing as a lawful good chaser? I don't know, but Halimede has some truly good writings on gender and sexuality, especially surrounding trans women."
+		],
+		[
+			"James Sinclair",
+			"https://jrsinclair.com",
+			"/index.rss",
+			"Web dev, FP and philosophy. I may not be religious but I respect his work, and this is also one of the most beautiful websites I've laid eyes upon."
+		],
+		[
+			"maia arson crimew",
+			"https://maia.crimew.gay/posts",
+			"../feed.xml",
+			"Does maia need introduction? Probably not but I'll do it anyway. maia does hacktivism, investigative journalism, and generally cool shit. Highlight on the #FuckStalkerware series!"
+		],
 		["Mario's Lab", "https://marioslab.io/posts", "/rss.xml", "Some fun posts here on text rendering"],
-		["Marvin Hagemeister", "https://marvinh.dev", "/feed.xml", "The 'Speeding up the JavaScript Ecosystem' series is just fantastic."],
-		["Oro", "https://orowith2os.gitlab.io", "/feed.xml", "Flatpak, I guess? Hard to classify a blog off 2 posts but I am definitely interested in seeing anything else they post."],
-		["Shu Ding", "https://shud.in/thoughts", "../feed.xml", "Some interesting tech/philosophical posts. Nice website."],
-		["Copetti", "https://www.copetti.org", "/index.xml", "Truly fascinating posts dissecting the hardware and software architecture of video game consoles."],
-		["The Pudding", "https://pudding.cool", "/rss.xml", "Super super high effort, miscellaneous but always beautiful interactive data-driven publication"],
+		[
+			"Marvin Hagemeister",
+			"https://marvinh.dev",
+			"/feed.xml",
+			"The 'Speeding up the JavaScript Ecosystem' series is just fantastic."
+		],
+		[
+			"Oro",
+			"https://orowith2os.gitlab.io",
+			"/feed.xml",
+			"Flatpak, I guess? Hard to classify a blog off 2 posts but I am definitely interested in seeing anything else they post."
+		],
+		[
+			"Shu Ding",
+			"https://shud.in/thoughts",
+			"../feed.xml",
+			"Some interesting tech/philosophical posts. Nice website."
+		],
+		[
+			"Copetti",
+			"https://www.copetti.org",
+			"/index.xml",
+			"Truly fascinating posts dissecting the hardware and software architecture of video game consoles."
+		],
+		[
+			"The Pudding",
+			"https://pudding.cool",
+			"/rss.xml",
+			"Super super high effort, miscellaneous but always beautiful interactive data-driven publication"
+		],
 		["Nikitonsky", "https://tonsky.me", "/atom.xml", "Some pretty nice misc posts about software"],
 		["Tzvetan Mikov", "https://tmikov.blogspot.com", "/feeds/posts/default", "Low level software things"]
 	],
 	"blogsIRecommend": [
-		["Erin in the Morning", "https://www.erininthemorning.com", "/feed", "Erin Reed is a truly important journalist doing valuable work, but I do not have the mental capacity to read about the latest atrocity happening to trans individuals every morning unfortunately."],
-		["Josh Comeau", "https://joshwcomeau.com", "/rss.xml", "Very well written and visual explanations of web development and React concepts. I highly recommend his site if you are in the target audience for that!"],
-		["Quanta Magazine", "https://www.quantamagazine.org", "/feed/", "Gorgeous articles about math and science. If you want to keep up with the state of the art in math, physics, chemistry, and biology this is 100% the magazine to read. I only don't keep up because its too high quantity to keep up with >_<."],
-		["web.dev", "https://web.dev/blog", "../static/blog/feed.xml", "Posts on the state of the art in web development from the Google Chrome team."]
+		[
+			"Erin in the Morning",
+			"https://www.erininthemorning.com",
+			"/feed",
+			"Erin Reed is a truly important journalist doing valuable work, but I do not have the mental capacity to read about the latest atrocity happening to trans individuals every morning unfortunately."
+		],
+		[
+			"Josh Comeau",
+			"https://joshwcomeau.com",
+			"/rss.xml",
+			"Very well written and visual explanations of web development and React concepts. I highly recommend his site if you are in the target audience for that!"
+		],
+		[
+			"Quanta Magazine",
+			"https://www.quantamagazine.org",
+			"/feed/",
+			"Gorgeous articles about math and science. If you want to keep up with the state of the art in math, physics, chemistry, and biology this is 100% the magazine to read. I only don't keep up because its too high quantity to keep up with >_<."
+		],
+		[
+			"web.dev",
+			"https://web.dev/blog",
+			"../static/blog/feed.xml",
+			"Posts on the state of the art in web development from the Google Chrome team."
+		]
 	],
 	"articles": [
 		"https://beasthacker.com/til/parental-controls-arent-for-parents.html",

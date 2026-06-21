@@ -29,6 +29,6 @@ export function sortPhotos(photos: Photo[]) {
 
 export function sortRolls(rolls: Roll[]) {
 	const rollsc = [...rolls];
-	sortByDateInPlace(rollsc, r => r.dateadded);
+	sortByDateInPlace(rollsc, (r) => r.dateadded);
 	return rollsc;
 }

@@ -1,4 +1,4 @@
-import {type Roll, useDeleteRoll, useModifyRoll} from "./data.tsx";
+import { type Roll, useDeleteRoll, useModifyRoll } from "./data.tsx";
 import { createEffect, createSignal, onMount } from "solid-js";
 
 function EditBoxRow(props: { starting: string; key: string; id: number }) {

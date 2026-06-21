@@ -6,12 +6,16 @@ import {
 	useDeleteRoll,
 	useFeaturedCategories,
 	useRemoveFeaturedCat,
-	useRolls
+	useRolls,
 } from "./data.tsx";
 import { capitalize, sortRolls } from "./util.tsx";
 import { createSignal } from "solid-js";
 
-export const RollListing = () => <TanstackProvider><RollListingInner/></TanstackProvider>;
+export const RollListing = () => (
+	<TanstackProvider>
+		<RollListingInner />
+	</TanstackProvider>
+);
 
 function RollListingInner() {
 	const rolls = useRolls();
@@ -29,9 +33,7 @@ function RollListingInner() {
 				<ul>
 					{sortRolls(rolls.data).map((roll) => (
 						<li>
-							{isAuthed && (
-								<button onclick={() => useDeleteRoll(() => roll.id).mutate()}>Delete</button>
-							)}
+							{isAuthed && <button onclick={() => useDeleteRoll(() => roll.id).mutate()}>Delete</button>}
 							<span class="photo-date">{roll.dateadded.split(" ")[0]}</span>
 							<a href={`/photo/by-roll?roll=${roll.id}`}>{roll.name}</a>
 						</li>
@@ -49,17 +51,20 @@ function RollListingInner() {
 	);
 }
 
-export const CategoryListing = () => <TanstackProvider><CategoryListingInner /></TanstackProvider>
+export const CategoryListing = () => (
+	<TanstackProvider>
+		<CategoryListingInner />
+	</TanstackProvider>
+);
 
 function CategoryListingInner() {
-	const  featured = useFeaturedCategories();
+	const featured = useFeaturedCategories();
 	const [newCat, setNewCat] = createSignal("");
 
 	const removeMutation = useRemoveFeaturedCat();
 	const addMutation = useAddFeaturedCat();
 
 	return (
-
 		<div>
 			<h3>Featured Categories</h3>
 			{featured.isPending ? (
@@ -68,11 +73,7 @@ function CategoryListingInner() {
 				<ul>
 					{featured.data.map((cat) => (
 						<li>
-							{isAuthed && (
-								<button onclick={() => removeMutation.mutate(cat.category)}>
-									Delete
-								</button>
-							)}
+							{isAuthed && <button onclick={() => removeMutation.mutate(cat.category)}>Delete</button>}
 							<a href={`/photo/by-category?cat=${cat.category}`}>{capitalize(cat.category)}</a>
 						</li>
 					))}
@@ -82,7 +83,7 @@ function CategoryListingInner() {
 			{isAuthed && (
 				<>
 					<input value={newCat()} onchange={(e) => setNewCat(e.target.value)} />
-					<button onclick={() => addMutation.mutate({cat: newCat()})}>Add</button>
+					<button onclick={() => addMutation.mutate({ cat: newCat() })}>Add</button>
 				</>
 			)}
 		</div>

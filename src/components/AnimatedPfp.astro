@@ -1,4 +1,5 @@
 ---
+
 ---
 
 <div id="pfp-container" style={`--size: ${Astro.props.size}`}>
@@ -23,8 +24,8 @@
 <style lang="sass">
 	#pfp-container
 		@apply grid grid-rows-4 grid-cols-4 shrink-0
-		height: var(--size)
-		width: var(--size)
+			height: var(--size)
+			width: var(--size)
 
 		> *
 			@apply transition-property-transform transition-duration-600 transition-ease-[cubic-bezier(0.16,1,0.3,1)]
@@ -72,10 +73,16 @@
 		background: #0038a8 !important
 </style>
 
-<noscript><style is:inline> #pfp-container * { transform: none !important; } </style></noscript>
+<noscript
+	><style is:inline>
+		#pfp-container * {
+			transform: none !important;
+		}
+	</style></noscript
+>
 
 <script>
-	const $ = (sel: string) => (document.querySelector(sel) as HTMLDivElement).style.transform = "none";
+	const $ = (sel: string) => ((document.querySelector(sel) as HTMLDivElement).style.transform = "none");
 
 	setTimeout(() => {
 		$("#bg");

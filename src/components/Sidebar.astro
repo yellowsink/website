@@ -4,10 +4,12 @@ const { routes, currentPath } = Astro.props;
 const fixedPath = currentPath.length > 1 && currentPath.endsWith("/") ? currentPath.slice(0, -1) : currentPath;
 ---
 
-<nav id="sidebar"
-	  text="text dark:text-dark"
-	  bg="#fafafa dark:#181818"
-	  class=":uno: transition-colors flex flex-col p-20 pt-5 w-auto font-prose md:(h-dvh w-80 fixed) xl:w-120 shadow-lg">
+<nav
+	id="sidebar"
+	text="text dark:text-dark"
+	bg="#fafafa dark:#181818"
+	class=":uno: transition-colors flex flex-col p-20 pt-5 w-auto font-prose md:(h-dvh w-80 fixed) xl:w-120 shadow-lg"
+>
 	<ThemeToggler />
 
 	<h1 class="font-100 flex justify-center items-center gap-4">
@@ -15,8 +17,8 @@ const fixedPath = currentPath.length > 1 && currentPath.endsWith("/") ? currentP
 		<a
 			href="/domain"
 			class=":uno: block w-8 h-8 color-unset decoration-none text-center line-height-1em transition-colors hover:(text-white dark:text-black bg-black dark:bg-white)"
-			aria-label="Show domain listing"
-		>+</a>
+			aria-label="Show domain listing">+</a
+		>
 	</h1>
 	<h2>Pages:</h2>
 	<ul class="pl-0 m-0">

@@ -1,9 +1,9 @@
 import { createEffect, createSignal, onMount } from "solid-js";
-import {useAddPhoto} from "./data.tsx";
+import { useAddPhoto } from "./data.tsx";
 
 export function AddPhotosModal(props: { isOpen: boolean; onClose: () => void; roll: number }) {
 	let modalEl: HTMLDialogElement;
-	const [displayProgress, setDisplayProgress] = createSignal(0)
+	const [displayProgress, setDisplayProgress] = createSignal(0);
 
 	onMount(() => {
 		modalEl.onclose = () => props.onClose();
@@ -31,11 +31,11 @@ export function AddPhotosModal(props: { isOpen: boolean; onClose: () => void; ro
 					let tickets = 2;
 					let amtDone = 0;
 
-					await new Promise<void>(bigRes => {
+					await new Promise<void>((bigRes) => {
 						for (const f of files) {
 							(async () => {
 								// fake concurrency :)
-								while (tickets === 0) await new Promise(res => setTimeout(res, 100));
+								while (tickets === 0) await new Promise((res) => setTimeout(res, 100));
 								tickets--;
 
 								await addMutation.mutateAsync({ roll: props.roll, filename: f.name, content: f });

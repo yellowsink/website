@@ -1,21 +1,37 @@
-import {isAuthed, type Photo, photoUrlForId, TanstackProvider, useRollById, useRollOrCategoryPhotos} from "./data.tsx";
-import {PhotoGrid} from "./PhotoListingPage.tsx";
-import {EditPhotoModal} from "./EditPhotoModal.tsx";
-import {createMemo, createSignal, onCleanup} from "solid-js";
-import {capitalize, sortPhotos} from "./util.tsx";
+import {
+	isAuthed,
+	type Photo,
+	photoUrlForId,
+	TanstackProvider,
+	useRollById,
+	useRollOrCategoryPhotos,
+} from "./data.tsx";
+import { PhotoGrid } from "./PhotoListingPage.tsx";
+import { EditPhotoModal } from "./EditPhotoModal.tsx";
+import { createMemo, createSignal, onCleanup } from "solid-js";
+import { capitalize, sortPhotos } from "./util.tsx";
 
 export function RawPhoto(props: { photo: Photo; thumb?: boolean; style?: string; class?: string }) {
-	return <img src={photoUrlForId(props.photo.id, props.thumb)} alt={props.photo.desc} style={props.style} class={props.class} />;
+	return (
+		<img
+			src={photoUrlForId(props.photo.id, props.thumb)}
+			alt={props.photo.desc}
+			style={props.style}
+			class={props.class}
+		/>
+	);
 }
 
-export function StackedPhoto(props: { photo: Photo, hideFull?: boolean }) {
+export function StackedPhoto(props: { photo: Photo; hideFull?: boolean }) {
 	const exif = createMemo(() => props.photo.exif && JSON.parse(props.photo.exif));
 	const aspectRatio = () => exif() && exif().imageWidth / exif().imageHeight;
 
-	return <div class="stacked-photo-wrap" style={{ "aspect-ratio": aspectRatio() }}>
-		<img src={photoUrlForId(props.photo.id, true)} alt={props.photo.desc} />
-		{!props.hideFull && <img alt="" class="stacked-photo-driven" src={photoUrlForId(props.photo.id)} />}
-	</div>;
+	return (
+		<div class="stacked-photo-wrap" style={{ "aspect-ratio": aspectRatio() }}>
+			<img src={photoUrlForId(props.photo.id, true)} alt={props.photo.desc} />
+			{!props.hideFull && <img alt="" class="stacked-photo-driven" src={photoUrlForId(props.photo.id)} />}
+		</div>
+	);
 }
 
 export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: () => void }) {
@@ -30,17 +46,17 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 	const triggerHideFull = () => {
 		setHideFull(true);
 		setTimeout(() => setHideFull(false), 30);
-	}
+	};
 	const goNextAndTrigger = () => (triggerHideFull(), props.goNext());
 	const goPrevAndTrigger = () => (triggerHideFull(), props.goPrev());
 
 	function listener(kp: KeyboardEvent) {
-		console.log(kp.key)
+		console.log(kp.key);
 		if (kp.key === "ArrowRight") goNextAndTrigger();
 		if (kp.key === "ArrowLeft") goPrevAndTrigger();
 	}
 	document.addEventListener("keydown", listener);
-	onCleanup(() => document.removeEventListener("keydown", listener))
+	onCleanup(() => document.removeEventListener("keydown", listener));
 
 	return (
 		<div class="photo-view">
@@ -49,8 +65,7 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 			<p>
 				<span class="photo-date" style="margin-right: unset">
 					Taken {props.photo.datetaken};
-				</span>
-				{" "}
+				</span>{" "}
 				{roll()?.name ? (
 					<>
 						Film Roll: <a href={`/photo/by-roll?roll=${props.photo.roll}`}>{roll().name}</a>
@@ -112,7 +127,13 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 
 			{isAuthed && <button onclick={() => setEditModalOpen(true)}>Edit data</button>}
 
-			<EditPhotoModal isOpen={editModalOpen()} onClose={() => setEditModalOpen(false)} photo={props.photo} goNext={goNextAndTrigger} goPrev={goPrevAndTrigger} />
+			<EditPhotoModal
+				isOpen={editModalOpen()}
+				onClose={() => setEditModalOpen(false)}
+				photo={props.photo}
+				goNext={goNextAndTrigger}
+				goPrev={goPrevAndTrigger}
+			/>
 		</div>
 	);
 }
@@ -128,20 +149,31 @@ function PhotoPageInner() {
 	if (!photoId()) return "Missing photo ID";
 
 	// get all photos, to power next and previous ids
-	const listingPhotos = useRollOrCategoryPhotos(() => isNaN(rollId), () => isNaN(rollId) ? featuredCategory : rollId);
+	const listingPhotos = useRollOrCategoryPhotos(
+		() => isNaN(rollId),
+		() => (isNaN(rollId) ? featuredCategory : rollId),
+	);
 	const sortedPhotos = createMemo(() => listingPhotos.data && sortPhotos(listingPhotos.data));
 
 	// find photo and next and previous IDs
 	const photoData = createMemo(() => {
-		const idx = sortedPhotos()?.findIndex(p => p.id === photoId());
+		const idx = sortedPhotos()?.findIndex((p) => p.id === photoId());
 		if (idx === undefined || idx < 0) return { loading: true } as const;
 
-		return { photo: (sortedPhotos())[idx], next: (sortedPhotos())[idx + 1]?.id, prev: (sortedPhotos())[idx-1]?.id } as const;
+		return {
+			photo: sortedPhotos()[idx],
+			next: sortedPhotos()[idx + 1]?.id,
+			prev: sortedPhotos()[idx - 1]?.id,
+		} as const;
 	});
 
 	const goTo = (id: number) => {
 		setPhotoId(id);
-		history.replaceState(null, "", `/photo/photo?p=${photoId()}${featuredCategory ? `&cat=${featuredCategory}` : ''}${isNaN(rollId) ? '' : `&roll=${rollId}`}`);
+		history.replaceState(
+			null,
+			"",
+			`/photo/photo?p=${photoId()}${featuredCategory ? `&cat=${featuredCategory}` : ""}${isNaN(rollId) ? "" : `&roll=${rollId}`}`,
+		);
 	};
 
 	return (
@@ -150,8 +182,11 @@ function PhotoPageInner() {
 				"Loading photo..."
 			) : (
 				<>
-					<PhotoView photo={photoData().photo} goNext={photoData().next == null ? null : () => goTo(photoData().next)}
-					           goPrev={photoData().prev == null ? null : () => goTo(photoData().prev)}/>
+					<PhotoView
+						photo={photoData().photo}
+						goNext={photoData().next == null ? null : () => goTo(photoData().next)}
+						goPrev={photoData().prev == null ? null : () => goTo(photoData().prev)}
+					/>
 
 					{!isNaN(rollId) || featuredCategory ? (
 						<PhotoGrid roll={isNaN(rollId) ? undefined : rollId} category={featuredCategory} />
@@ -165,5 +200,9 @@ function PhotoPageInner() {
 }
 
 export function PhotoPage() {
-	return <TanstackProvider><PhotoPageInner /></TanstackProvider>
+	return (
+		<TanstackProvider>
+			<PhotoPageInner />
+		</TanstackProvider>
+	);
 }

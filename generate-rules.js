@@ -6,7 +6,8 @@ const fg = require("fast-glob");
 
 let rules = fs.readFileSync("Caddyfile-rules").toString();
 
-const addRule = (rule, route, as) => rule && (rules += `header ${route ?? ""} +Link "<${rule}>; rel=preload${ !as ? "" : `; as=${as}` }"\n`);
+const addRule = (rule, route, as) =>
+	rule && (rules += `header ${route ?? ""} +Link "<${rule}>; rel=preload${!as ? "" : `; as=${as}`}"\n`);
 
 // read google fonts url and create preload
 //addRule(

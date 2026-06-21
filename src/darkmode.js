@@ -2,11 +2,13 @@ const prefersDark = () => !!window.matchMedia("(prefers-color-scheme: dark)").ma
 const root = document.getElementById("root");
 
 const applyStyles = () => {
-	if (document.cookie.split("; ").includes("dark") || (!document.cookie.split("; ").includes("light") && prefersDark()))
+	if (
+		document.cookie.split("; ").includes("dark") ||
+		(!document.cookie.split("; ").includes("light") && prefersDark())
+	)
 		root.classList.add("dark");
-	else
-		root.classList.remove("dark");
-}
+	else root.classList.remove("dark");
+};
 
 export const toggleTheme = () => {
 	let newIsDark = !root.classList.contains("dark");

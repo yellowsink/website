@@ -1,12 +1,15 @@
-import {isAuthed, TanstackProvider, useRollById, useRollOrCategoryPhotos} from "./data.tsx";
+import { isAuthed, TanstackProvider, useRollById, useRollOrCategoryPhotos } from "./data.tsx";
 import { createSignal } from "solid-js";
 import { RawPhoto } from "./PhotoView.tsx";
 import { addLineBreaks, capitalize, sortPhotos } from "./util.tsx";
 import { AddPhotosModal } from "./AddPhotosModal.tsx";
-import {EditRollModal} from "./EditRollModal.tsx";
+import { EditRollModal } from "./EditRollModal.tsx";
 
 export function PhotoGrid(props: { roll?: number; category?: string }) {
-	const photos = useRollOrCategoryPhotos(() => !props.roll, () => props.roll || props.category);
+	const photos = useRollOrCategoryPhotos(
+		() => !props.roll,
+		() => props.roll || props.category,
+	);
 
 	const urlAddon = props.roll ? `&roll=${props.roll}` : `&cat=${props.category}`;
 
@@ -16,12 +19,11 @@ export function PhotoGrid(props: { roll?: number; category?: string }) {
 				"Loading photos..."
 			) : (
 				<div class="photo-listing-grid">
-					{sortPhotos(photos.data)
-						.map((p) => (
-							<a href={`/photo/photo?p=${p.id}${urlAddon}`}>
-								<RawPhoto photo={p} thumb />
-							</a>
-						))}
+					{sortPhotos(photos.data).map((p) => (
+						<a href={`/photo/photo?p=${p.id}${urlAddon}`}>
+							<RawPhoto photo={p} thumb />
+						</a>
+					))}
 				</div>
 			)}
 		</div>
@@ -35,11 +37,7 @@ export function PhotoListingPage(props: { roll?: number; category?: string }) {
 
 	return (
 		<div>
-			<h2>
-				{props.roll
-					? roll()?.name ?? "..."
-					: `Category: ${capitalize(props.category)}`}
-			</h2>
+			<h2>{props.roll ? (roll()?.name ?? "...") : `Category: ${capitalize(props.category)}`}</h2>
 
 			{roll() && <p class="photo-date">Added {roll().dateadded}</p>}
 			{roll()?.desc && <p>{addLineBreaks(roll().desc)}</p>}
@@ -68,5 +66,7 @@ export function ByRollWrapper() {
 export function ByCategoryWrapper() {
 	const category = new URLSearchParams(location.search).get("cat");
 
-	return <TanstackProvider>{!category ? "Missing category" : <PhotoListingPage category={category} />}</TanstackProvider>;
+	return (
+		<TanstackProvider>{!category ? "Missing category" : <PhotoListingPage category={category} />}</TanstackProvider>
+	);
 }

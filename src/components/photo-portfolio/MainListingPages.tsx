@@ -11,14 +11,15 @@ import {
 import { capitalize, sortRolls } from "./util.tsx";
 import { createSignal } from "solid-js";
 
-export function RollListing() {
+export const RollListing = () => <TanstackProvider><RollListingInner/></TanstackProvider>;
+
+function RollListingInner() {
 	const rolls = useRolls();
 	const [newRoll, setNewRoll] = createSignal("");
 
 	const addMutation = useAddRoll();
 
 	return (
-<TanstackProvider>
 		<div>
 			<h3>Browse by Film Roll</h3>
 
@@ -45,11 +46,12 @@ export function RollListing() {
 				</>
 			)}
 		</div>
-</TanstackProvider>
 	);
 }
 
-export function CategoryListing() {
+export const CategoryListing = () => <TanstackProvider><CategoryListingInner /></TanstackProvider>
+
+function CategoryListingInner() {
 	const  featured = useFeaturedCategories();
 	const [newCat, setNewCat] = createSignal("");
 
@@ -57,7 +59,7 @@ export function CategoryListing() {
 	const addMutation = useAddFeaturedCat();
 
 	return (
-		<TanstackProvider>
+
 		<div>
 			<h3>Featured Categories</h3>
 			{featured.isPending ? (
@@ -83,6 +85,6 @@ export function CategoryListing() {
 					<button onclick={() => addMutation.mutate({cat: newCat()})}>Add</button>
 				</>
 			)}
-		</div></TanstackProvider>
+		</div>
 	);
 }

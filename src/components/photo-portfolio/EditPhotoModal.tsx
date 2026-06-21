@@ -1,8 +1,13 @@
 import {type Photo, useDeletePhoto, useModifyPhoto} from "./data.tsx";
-import { createEffect, createSignal, onMount } from "solid-js";
+import {type Accessor, createEffect, createSignal, onMount, untrack} from "solid-js";
 
-function EditBoxRow(props: { starting: string; key: string; id: number }) {
+function EditBoxRow(props: { starting: string; key: string; id: number, resetSignal: Accessor<undefined> }) {
 	const [current, setCurrent] = createSignal(props.starting);
+
+	createEffect(() => {
+		props.resetSignal();
+		setCurrent(untrack(() => props.starting))
+	})
 
 	const modifyMutation = useModifyPhoto(() => props.id);
 
@@ -14,7 +19,7 @@ function EditBoxRow(props: { starting: string; key: string; id: number }) {
 	);
 }
 
-export function EditPhotoModal(props: { isOpen: boolean; onClose: () => void; photo: Photo }) {
+export function EditPhotoModal(props: { isOpen: boolean; onClose: () => void; photo: Photo, goNext: () => void; goPrev: () => void; }) {
 	let modalEl: HTMLDialogElement;
 
 	onMount(() => {
@@ -28,14 +33,23 @@ export function EditPhotoModal(props: { isOpen: boolean; onClose: () => void; ph
 
 	const deleteMutation = useDeletePhoto(() => props.photo.id);
 
+	// just used to reset all the boxes on navigate
+	const [resetSignal, triggerReset] = createSignal(undefined, { equals: false });
+
 	return (
 		<dialog ref={modalEl}>
 			<button onclick={props.onClose}>Close</button>
-			<EditBoxRow starting={props.photo.datetaken} key="taken" id={props.photo.id} />
-			<EditBoxRow starting={props.photo.name} key="name" id={props.photo.id} />
-			<EditBoxRow starting={props.photo.desc} key="desc" id={props.photo.id} />
-			<EditBoxRow starting={props.photo.categories} key="categories" id={props.photo.id} />
-			<EditBoxRow starting={props.photo.is_fave ? "true" : "false"} key="fave" id={props.photo.id} />
+			<button onclick={() => (props.goPrev(), triggerReset())}>
+				&lt;
+			</button>
+			<button onclick={() => (props.goNext(), triggerReset())}>
+				&gt;
+			</button>
+			<EditBoxRow resetSignal={resetSignal} starting={props.photo.datetaken} key="taken" id={props.photo.id} />
+			<EditBoxRow resetSignal={resetSignal} starting={props.photo.name} key="name" id={props.photo.id} />
+			<EditBoxRow resetSignal={resetSignal} starting={props.photo.desc} key="desc" id={props.photo.id} />
+			<EditBoxRow resetSignal={resetSignal} starting={props.photo.categories} key="categories" id={props.photo.id} />
+			<EditBoxRow resetSignal={resetSignal} starting={props.photo.is_fave ? "true" : "false"} key="fave" id={props.photo.id} />
 
 			<button onclick={() => deleteMutation.mutate()}>Delete photo</button>
 		</dialog>

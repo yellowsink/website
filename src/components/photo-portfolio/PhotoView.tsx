@@ -2,17 +2,17 @@ import {isAuthed, type Photo, photoUrlForId, TanstackProvider, useRollById, useR
 import {PhotoGrid} from "./PhotoListingPage.tsx";
 import {EditPhotoModal} from "./EditPhotoModal.tsx";
 import {createMemo, createSignal} from "solid-js";
-import {capitalize} from "./util.tsx";
+import {capitalize, sortPhotos} from "./util.tsx";
 
 export function RawPhoto(props: { photo: Photo; thumb?: boolean; style?: string; class?: string }) {
 	return <img src={photoUrlForId(props.photo.id, props.thumb)} alt={props.photo.desc} style={props.style} class={props.class} />;
 }
 
 export function StackedPhoto(props: { photo: Photo, hideFull?: boolean }) {
-	const exif = props.photo.exif && JSON.parse(props.photo.exif);
-	const aspectRatio = exif && exif.imageWidth / exif.imageHeight;
+	const exif = createMemo(() => props.photo.exif && JSON.parse(props.photo.exif));
+	const aspectRatio = () => exif() && exif().imageWidth / exif().imageHeight;
 
-	return <div class="stacked-photo-wrap" style={{ "aspect-ratio": aspectRatio }}>
+	return <div class="stacked-photo-wrap" style={{ "aspect-ratio": aspectRatio() }}>
 		<img src={photoUrlForId(props.photo.id, true)} alt={props.photo.desc} />
 		{!props.hideFull && <img alt="" class="stacked-photo-driven" src={photoUrlForId(props.photo.id)} />}
 	</div>;
@@ -31,6 +31,8 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 		setHideFull(true);
 		setTimeout(() => setHideFull(false), 30);
 	}
+	const goNextAndTrigger = () => (triggerHideFull(), props.goNext());
+	const goPrevAndTrigger = () => (triggerHideFull(), props.goPrev());
 
 	return (
 		<div class="photo-view">
@@ -63,11 +65,11 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 			{props.photo.desc && <p>{props.photo.desc}</p>}
 
 			<div class="photo-wrapper">
-				<button onclick={() => (props.goPrev(), triggerHideFull())} disabled={!props.goPrev}>
+				<button onclick={goPrevAndTrigger} disabled={!props.goPrev}>
 					&lt;
 				</button>
 				<StackedPhoto photo={props.photo} hideFull={hideFull()} />
-				<button onclick={() => (props.goNext(), triggerHideFull())} disabled={!props.goNext}>
+				<button onclick={goNextAndTrigger} disabled={!props.goNext}>
 					&gt;
 				</button>
 			</div>
@@ -102,14 +104,14 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 
 			{isAuthed && <button onclick={() => setEditModalOpen(true)}>Edit data</button>}
 
-			<EditPhotoModal isOpen={editModalOpen()} onClose={() => setEditModalOpen(false)} photo={props.photo} />
+			<EditPhotoModal isOpen={editModalOpen()} onClose={() => setEditModalOpen(false)} photo={props.photo} goNext={goNextAndTrigger} goPrev={goPrevAndTrigger} />
 		</div>
 	);
 }
 
 function PhotoPageInner() {
 	// for the carousel later
-	const rollId = Number(new URLSearchParams(location.search).get("roll"));
+	const rollId = Number(new URLSearchParams(location.search).get("roll") ?? undefined);
 	const featuredCategory = new URLSearchParams(location.search).get("cat");
 
 	// important bit
@@ -119,19 +121,19 @@ function PhotoPageInner() {
 
 	// get all photos, to power next and previous ids
 	const listingPhotos = useRollOrCategoryPhotos(() => isNaN(rollId), () => isNaN(rollId) ? featuredCategory : rollId);
+	const sortedPhotos = createMemo(() => listingPhotos.data && sortPhotos(listingPhotos.data));
 
 	// find photo and next and previous IDs
 	const photoData = createMemo(() => {
-		const idx = listingPhotos.data?.findIndex(p => p.id === photoId());
+		const idx = sortedPhotos()?.findIndex(p => p.id === photoId());
 		if (idx === undefined || idx < 0) return { loading: true } as const;
 
-		return { photo: (listingPhotos.data)[idx], next: (listingPhotos.data)[idx + 1]?.id, prev: (listingPhotos.data)[idx-1]?.id } as const;
+		return { photo: (sortedPhotos())[idx], next: (sortedPhotos())[idx + 1]?.id, prev: (sortedPhotos())[idx-1]?.id } as const;
 	});
 
 	const goTo = (id: number) => {
 		setPhotoId(id);
-		// TODO: handle navigation i guess idk
-		history.pushState(null, "", `/photo/photo?p=${photoId()}${featuredCategory ? `&cat=${featuredCategory}` : ''}${isNaN(rollId) ? '' : `&roll=${rollId}`}`);
+		history.replaceState(null, "", `/photo/photo?p=${photoId()}${featuredCategory ? `&cat=${featuredCategory}` : ''}${isNaN(rollId) ? '' : `&roll=${rollId}`}`);
 	};
 
 	return (
@@ -140,8 +142,8 @@ function PhotoPageInner() {
 				"Loading photo..."
 			) : (
 				<>
-					<PhotoView photo={photoData().photo} goNext={() => goTo(photoData().next)}
-					           goPrev={() => goTo(photoData().prev)}/>
+					<PhotoView photo={photoData().photo} goNext={photoData().next == null ? null : () => goTo(photoData().next)}
+					           goPrev={photoData().prev == null ? null : () => goTo(photoData().prev)}/>
 
 					{!isNaN(rollId) || featuredCategory ? (
 						<PhotoGrid roll={isNaN(rollId) ? undefined : rollId} category={featuredCategory} />

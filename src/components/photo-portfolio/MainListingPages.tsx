@@ -27,11 +27,18 @@ function RollListingInner() {
 		<div>
 			<h3>Browse by Film Roll</h3>
 
+			{isAuthed && (
+				<>
+					<input value={newRoll()} onchange={(e) => setNewRoll(e.target.value)} />
+					<button onclick={() => addMutation.mutate(newRoll())}>Add</button>
+				</>
+			)}
+
 			{rolls.isPending ? (
 				"Loading, please wait..."
 			) : (
 				<ul>
-					{sortRolls(rolls.data).map((roll) => (
+					{sortRolls(rolls.data).toReversed().map((roll) => (
 						<li>
 							{isAuthed && <button onclick={() => useDeleteRoll(() => roll.id).mutate()}>Delete</button>}
 							<span class="photo-date">{roll.dateadded.split(" ")[0]}</span>
@@ -39,13 +46,6 @@ function RollListingInner() {
 						</li>
 					))}
 				</ul>
-			)}
-
-			{isAuthed && (
-				<>
-					<input value={newRoll()} onchange={(e) => setNewRoll(e.target.value)} />
-					<button onclick={() => addMutation.mutate(newRoll())}>Add</button>
-				</>
 			)}
 		</div>
 	);

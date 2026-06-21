@@ -104,7 +104,7 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 							{ex.make ?? ""} {ex.cameraModelName ?? ""}
 						</span>
 					)}
-					{ex.lensType && <span>{ex.lensType}</span>}
+					{ex.lensID && <span>{ex.lensID}</span>}
 					{ex.shutterSpeed && <span>{ex.shutterSpeed} sec</span>}
 					{ex.apertureSetting && (
 						<span>

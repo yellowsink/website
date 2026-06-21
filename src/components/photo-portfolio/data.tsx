@@ -248,7 +248,7 @@ export function useAddRoll() {
 export function useAddFeaturedCat() {
 	return useMutation(() => ({
 		mutationFn: (vars: { cat: string; feature?: number }) =>
-			request<FeaturedCategory>(`/admin/featuredcat/${vars.cat}?feature=${vars.feature || ""}`),
+			request<FeaturedCategory>(`/admin/featuredcat/${vars.cat}?feature=${vars.feature || ""}`, true, "POST"),
 		onSuccess: (data, vars, _omr, ctx) => {
 			ctx.client.setQueryData(["featured-cats"], (old: FeaturedCategory[]) => [...old, data]);
 		},

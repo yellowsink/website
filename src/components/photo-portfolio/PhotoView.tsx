@@ -1,7 +1,7 @@
 import {isAuthed, type Photo, photoUrlForId, TanstackProvider, useRollById, useRollOrCategoryPhotos} from "./data.tsx";
 import {PhotoGrid} from "./PhotoListingPage.tsx";
 import {EditPhotoModal} from "./EditPhotoModal.tsx";
-import {createMemo, createSignal} from "solid-js";
+import {createMemo, createSignal, onCleanup} from "solid-js";
 import {capitalize, sortPhotos} from "./util.tsx";
 
 export function RawPhoto(props: { photo: Photo; thumb?: boolean; style?: string; class?: string }) {
@@ -34,6 +34,14 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 	const goNextAndTrigger = () => (triggerHideFull(), props.goNext());
 	const goPrevAndTrigger = () => (triggerHideFull(), props.goPrev());
 
+	function listener(kp: KeyboardEvent) {
+		console.log(kp.key)
+		if (kp.key === "ArrowRight") goNextAndTrigger();
+		if (kp.key === "ArrowLeft") goPrevAndTrigger();
+	}
+	document.addEventListener("keydown", listener);
+	onCleanup(() => document.removeEventListener("keydown", listener))
+
 	return (
 		<div class="photo-view">
 			<h2>{props.photo.name || `Photo`}</h2>
@@ -65,11 +73,11 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 			{props.photo.desc && <p>{props.photo.desc}</p>}
 
 			<div class="photo-wrapper">
-				<button onclick={goPrevAndTrigger} disabled={!props.goPrev}>
+				<button onclick={goPrevAndTrigger} disabled={!props.goPrev} class="photo-nav-button">
 					&lt;
 				</button>
 				<StackedPhoto photo={props.photo} hideFull={hideFull()} />
-				<button onclick={goNextAndTrigger} disabled={!props.goNext}>
+				<button onclick={goNextAndTrigger} disabled={!props.goNext} class="photo-nav-button">
 					&gt;
 				</button>
 			</div>

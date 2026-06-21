@@ -37,7 +37,7 @@ export function EditPhotoModal(props: { isOpen: boolean; onClose: () => void; ph
 	const [resetSignal, triggerReset] = createSignal(undefined, { equals: false });
 
 	return (
-		<dialog ref={modalEl}>
+		<dialog ref={modalEl} onkeydown={ev => ev.stopImmediatePropagation()}>
 			<button onclick={props.onClose}>Close</button>
 			<button onclick={() => (props.goPrev(), triggerReset())}>
 				&lt;

@@ -1,31 +1,35 @@
 import {
-	addFeaturedCat,
-	addRoll,
-	authPassword,
-	deleteRoll,
-	featuredCategories,
-	removeFeaturedCat,
-	rolls,
-} from "./data.ts";
+	isAuthed,
+	TanstackProvider,
+	useAddFeaturedCat,
+	useAddRoll,
+	useDeleteRoll,
+	useFeaturedCategories,
+	useRemoveFeaturedCat,
+	useRolls
+} from "./data.tsx";
 import { capitalize, sortRolls } from "./util.tsx";
 import { createSignal } from "solid-js";
 
 export function RollListing() {
-	const [filmRolls] = rolls;
+	const rolls = useRolls();
 	const [newRoll, setNewRoll] = createSignal("");
 
+	const addMutation = useAddRoll();
+
 	return (
+<TanstackProvider>
 		<div>
 			<h3>Browse by Film Roll</h3>
 
-			{filmRolls.loading ? (
+			{rolls.isPending ? (
 				"Loading, please wait..."
 			) : (
 				<ul>
-					{sortRolls(filmRolls()).map((roll) => (
+					{sortRolls(rolls.data).map((roll) => (
 						<li>
-							{authPassword && (
-								<button onclick={() => deleteRoll(roll.id).then(() => location.reload())}>Delete</button>
+							{isAuthed && (
+								<button onclick={() => useDeleteRoll(() => roll.id).mutate()}>Delete</button>
 							)}
 							<span class="photo-date">{roll.dateadded.split(" ")[0]}</span>
 							<a href={`/photo/by-roll?roll=${roll.id}`}>{roll.name}</a>
@@ -34,31 +38,36 @@ export function RollListing() {
 				</ul>
 			)}
 
-			{authPassword && (
+			{isAuthed && (
 				<>
 					<input value={newRoll()} onchange={(e) => setNewRoll(e.target.value)} />
-					<button onclick={() => addRoll(newRoll()).then(() => location.reload())}>Add</button>
+					<button onclick={() => addMutation.mutate(newRoll())}>Add</button>
 				</>
 			)}
 		</div>
+</TanstackProvider>
 	);
 }
 
 export function CategoryListing() {
-	const [featured] = featuredCategories;
+	const  featured = useFeaturedCategories();
 	const [newCat, setNewCat] = createSignal("");
 
+	const removeMutation = useRemoveFeaturedCat();
+	const addMutation = useAddFeaturedCat();
+
 	return (
+		<TanstackProvider>
 		<div>
 			<h3>Featured Categories</h3>
-			{featured.loading ? (
+			{featured.isPending ? (
 				"Loading, please wait..."
 			) : (
 				<ul>
-					{featured().map((cat) => (
+					{featured.data.map((cat) => (
 						<li>
-							{authPassword && (
-								<button onclick={() => removeFeaturedCat(cat.category).then(() => location.reload())}>
+							{isAuthed && (
+								<button onclick={() => removeMutation.mutate(cat.category)}>
 									Delete
 								</button>
 							)}
@@ -68,12 +77,12 @@ export function CategoryListing() {
 				</ul>
 			)}
 
-			{authPassword && (
+			{isAuthed && (
 				<>
 					<input value={newCat()} onchange={(e) => setNewCat(e.target.value)} />
-					<button onclick={() => addFeaturedCat(newCat()).then(() => location.reload())}>Add</button>
+					<button onclick={() => addMutation.mutate({cat: newCat()})}>Add</button>
 				</>
 			)}
-		</div>
+		</div></TanstackProvider>
 	);
 }

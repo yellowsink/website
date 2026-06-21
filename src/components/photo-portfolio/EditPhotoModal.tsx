@@ -1,13 +1,15 @@
-import { deletePhoto, modifyPhoto, type Photo } from "./data.ts";
+import {type Photo, useDeletePhoto, useModifyPhoto} from "./data.tsx";
 import { createEffect, createSignal, onMount } from "solid-js";
 
 function EditBoxRow(props: { starting: string; key: string; id: number }) {
 	const [current, setCurrent] = createSignal(props.starting);
 
+	const modifyMutation = useModifyPhoto(() => props.id);
+
 	return (
 		<div class="photo-edit-row">
 			<input type="text" value={current()} onchange={(e) => setCurrent(e.target.value)} />
-			<button onclick={() => modifyPhoto({ id: props.id, [props.key]: current() })}>Change {props.key}</button>
+			<button onclick={() => modifyMutation.mutate({ [props.key]: current() })}>Change {props.key}</button>
 		</div>
 	);
 }
@@ -24,6 +26,8 @@ export function EditPhotoModal(props: { isOpen: boolean; onClose: () => void; ph
 		});
 	});
 
+	const deleteMutation = useDeletePhoto(() => props.photo.id);
+
 	return (
 		<dialog ref={modalEl}>
 			<button onclick={props.onClose}>Close</button>
@@ -33,7 +37,7 @@ export function EditPhotoModal(props: { isOpen: boolean; onClose: () => void; ph
 			<EditBoxRow starting={props.photo.categories} key="categories" id={props.photo.id} />
 			<EditBoxRow starting={props.photo.is_fave ? "true" : "false"} key="fave" id={props.photo.id} />
 
-			<button onclick={() => deletePhoto(props.photo.id)}>Delete photo</button>
+			<button onclick={() => deleteMutation.mutate()}>Delete photo</button>
 		</dialog>
 	);
 }

@@ -1,8 +1,8 @@
-import {authPassword, getPhotoById, type Photo, photosForRoll, photoUrlForId, rolls} from "./data.ts";
-import { PhotoGrid } from "./PhotoListingPage.tsx";
-import { EditPhotoModal } from "./EditPhotoModal.tsx";
-import { createMemo, createSignal } from "solid-js";
-import { capitalize } from "./util.tsx";
+import {isAuthed, type Photo, photoUrlForId, TanstackProvider, useRollById, useRollOrCategoryPhotos} from "./data.tsx";
+import {PhotoGrid} from "./PhotoListingPage.tsx";
+import {EditPhotoModal} from "./EditPhotoModal.tsx";
+import {createMemo, createSignal} from "solid-js";
+import {capitalize} from "./util.tsx";
 
 export function RawPhoto(props: { photo: Photo; thumb?: boolean; style?: string; class?: string }) {
 	return <img src={photoUrlForId(props.photo.id, props.thumb)} alt={props.photo.desc} style={props.style} class={props.class} />;
@@ -19,8 +19,7 @@ export function StackedPhoto(props: { photo: Photo }) {
 }
 
 export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: () => void }) {
-	const [allRolls] = rolls;
-	const roll = createMemo(() => allRolls()?.find((r) => r.id === props.photo.roll));
+	const roll = useRollById(() => props.photo.roll);
 
 	const [editModalOpen, setEditModalOpen] = createSignal(false);
 
@@ -94,14 +93,14 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 				</div>
 			)}
 
-			{authPassword && <button onclick={() => setEditModalOpen(true)}>Edit data</button>}
+			{isAuthed && <button onclick={() => setEditModalOpen(true)}>Edit data</button>}
 
 			<EditPhotoModal isOpen={editModalOpen()} onClose={() => setEditModalOpen(false)} photo={props.photo} />
 		</div>
 	);
 }
 
-export function PhotoPage() {
+function PhotoPageInner() {
 	// for the carousel later
 	const rollId = Number(new URLSearchParams(location.search).get("roll"));
 	const featuredCategory = new URLSearchParams(location.search).get("cat");
@@ -111,22 +110,20 @@ export function PhotoPage() {
 
 	if (!photoId()) return "Missing photo ID";
 
-	// get all photos (only works for rolls rn)
-	const [allRolls] = rolls;
-	const roll = createMemo(() => allRolls()?.find((r) => r.id === rollId));
-	const rollPhotosRes = createMemo(() => photosForRoll(roll()?.id)[0]);
+	// get all photos, to power next and previous ids
+	const listingPhotos = useRollOrCategoryPhotos(() => isNaN(rollId), () => isNaN(rollId) ? featuredCategory : rollId);
 
 	// find photo and next and previous IDs
 	const photoData = createMemo(() => {
-		const photos = rollPhotosRes()();
-		const idx = photos?.findIndex(p => p.id === photoId());
+		const idx = listingPhotos.data?.findIndex(p => p.id === photoId());
 		if (idx === undefined || idx < 0) return { loading: true } as const;
 
-		return { photo: photos[idx], next: photos[idx + 1]?.id, prev: photos[idx-1]?.id } as const;
+		return { photo: (listingPhotos.data)[idx], next: (listingPhotos.data)[idx + 1]?.id, prev: (listingPhotos.data)[idx-1]?.id } as const;
 	});
 
 	const goTo = (id: number) => {
 		setPhotoId(id);
+		// TODO: handle navigation i guess idk
 		history.pushState(null, "", `/photo/photo?p=${photoId()}${featuredCategory ? `&cat=${featuredCategory}` : ''}${isNaN(rollId) ? '' : `&roll=${rollId}`}`);
 	};
 
@@ -148,4 +145,8 @@ export function PhotoPage() {
 			)}
 		</>
 	);
+}
+
+export function PhotoPage() {
+	return <TanstackProvider><PhotoPageInner /></TanstackProvider>
 }

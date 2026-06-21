@@ -1,5 +1,5 @@
 import { createEffect, createSignal, onMount } from "solid-js";
-import { addPhoto } from "./data.ts";
+import {useAddPhoto} from "./data.tsx";
 
 export function AddPhotosModal(props: { isOpen: boolean; onClose: () => void; roll: number }) {
 	let modalEl: HTMLDialogElement;
@@ -13,6 +13,8 @@ export function AddPhotosModal(props: { isOpen: boolean; onClose: () => void; ro
 			else modalEl.close();
 		});
 	});
+
+	const addMutation = useAddPhoto();
 
 	return (
 		<dialog ref={modalEl}>
@@ -36,7 +38,7 @@ export function AddPhotosModal(props: { isOpen: boolean; onClose: () => void; ro
 								while (tickets === 0) await new Promise(res => setTimeout(res, 100));
 								tickets--;
 
-								await addPhoto(props.roll, f.name, f);
+								await addMutation.mutateAsync({ roll: props.roll, filename: f.name, content: f });
 
 								tickets++;
 								amtDone++;

@@ -1,5 +1,5 @@
 import { differenceInSeconds } from "date-fns";
-import type { Photo, Roll } from "./data.ts";
+import type { Photo, Roll } from "./data.tsx";
 
 const dontCapitalize = ["and", "to", "or"];
 export const capitalize = (str: string) =>

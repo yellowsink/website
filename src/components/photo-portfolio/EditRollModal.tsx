@@ -1,13 +1,15 @@
-import {deleteRoll, modifyRoll, type Roll} from "./data.ts";
+import {type Roll, useDeleteRoll, useModifyRoll} from "./data.tsx";
 import { createEffect, createSignal, onMount } from "solid-js";
 
 function EditBoxRow(props: { starting: string; key: string; id: number }) {
 	const [current, setCurrent] = createSignal(props.starting);
 
+	const modifyMutation = useModifyRoll(() => props.id);
+
 	return (
 		<div class="photo-edit-row">
 			<input type="text" value={current()} onchange={(e) => setCurrent(e.target.value)} />
-			<button onclick={() => modifyRoll({ id: props.id, [props.key]: current() })}>Change {props.key}</button>
+			<button onclick={() => modifyMutation.mutate({ [props.key]: current() })}>Change {props.key}</button>
 		</div>
 	);
 }
@@ -15,10 +17,12 @@ function EditBoxRow(props: { starting: string; key: string; id: number }) {
 function EditAreaRow(props: { starting: string; key: string; id: number }) {
 	const [current, setCurrent] = createSignal(props.starting);
 
+	const modifyMutation = useModifyRoll(() => props.id);
+
 	return (
 		<div class="photo-edit-row">
 			<textarea value={current()} onchange={(e) => setCurrent(e.target.value)} />
-			<button onclick={() => modifyRoll({ id: props.id, [props.key]: current() })}>Change {props.key}</button>
+			<button onclick={() => modifyMutation.mutate({ [props.key]: current() })}>Change {props.key}</button>
 		</div>
 	);
 }
@@ -35,6 +39,8 @@ export function EditRollModal(props: { isOpen: boolean; onClose: () => void; rol
 		});
 	});
 
+	const deleteMutation = useDeleteRoll(() => props.roll.id);
+
 	return (
 		<dialog ref={modalEl}>
 			<button onclick={props.onClose}>Close</button>
@@ -42,7 +48,7 @@ export function EditRollModal(props: { isOpen: boolean; onClose: () => void; rol
 			<EditBoxRow starting={props.roll.name} key="name" id={props.roll.id} />
 			<EditAreaRow starting={props.roll.desc} key="desc" id={props.roll.id} />
 
-			<button onclick={() => deleteRoll(props.roll.id)}>Delete roll</button>
+			<button onclick={() => deleteMutation.mutate()}>Delete roll</button>
 		</dialog>
 	);
 }

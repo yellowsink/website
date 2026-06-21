@@ -38,13 +38,17 @@ function RollListingInner() {
 				"Loading, please wait..."
 			) : (
 				<ul>
-					{sortRolls(rolls.data).toReversed().map((roll) => (
-						<li>
-							{isAuthed && <button onclick={() => useDeleteRoll(() => roll.id).mutate()}>Delete</button>}
-							<span class="photo-date">{roll.dateadded.split(" ")[0]}</span>
-							<a href={`/photo/by-roll?roll=${roll.id}`}>{roll.name}</a>
-						</li>
-					))}
+					{sortRolls(rolls.data).toReversed().map((roll) => {
+						// need to keep the context intact by creating the mutation during rendering
+						const delMutation = useDeleteRoll(() => roll.id);
+						return (
+							<li>
+								{isAuthed && <button onclick={() => delMutation.mutate()}>Delete</button>}
+								<span class="photo-date">{roll.dateadded.split(" ")[0]}</span>
+								<a href={`/photo/by-roll?roll=${roll.id}`}>{roll.name}</a>
+							</li>
+						);
+					})}
 				</ul>
 			)}
 		</div>

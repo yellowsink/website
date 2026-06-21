@@ -49,7 +49,6 @@ export function AddPhotosModal(props: { isOpen: boolean; onClose: () => void; ro
 					});
 
 					props.onClose?.();
-					location.reload();
 				}}
 			/>
 		</dialog>

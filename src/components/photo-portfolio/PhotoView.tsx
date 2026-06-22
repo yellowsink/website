@@ -39,7 +39,7 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 
 	const [editModalOpen, setEditModalOpen] = createSignal(false);
 
-	const ex = props.photo.exif ? JSON.parse(props.photo.exif) : undefined;
+	const ex = createMemo(() => props.photo.exif ? JSON.parse(props.photo.exif) : undefined);
 
 	// blank full size image when navigating to prevent the old one sticking for too long and feeling sluggish
 	const [hideFull, setHideFull] = createSignal(false);
@@ -97,29 +97,29 @@ export function PhotoView(props: { photo: Photo; goNext?: () => void; goPrev?: (
 				</button>
 			</div>
 
-			{ex && (
+			{ex() && (
 				<div class="exif-tags">
-					{(ex.make || ex.cameraModelName) && (
+					{(ex().make || ex().cameraModelName) && (
 						<span>
-							{ex.make ?? ""} {ex.cameraModelName ?? ""}
+							{ex().make ?? ""} {ex().cameraModelName ?? ""}
 						</span>
 					)}
-					{ex.lensID && <span>{ex.lensID}</span>}
-					{ex.shutterSpeed && <span>{ex.shutterSpeed} sec</span>}
-					{ex.apertureSetting && (
+					{ex().lensID && <span>{ex().lensID}</span>}
+					{ex().shutterSpeed && <span>{ex().shutterSpeed} sec</span>}
+					{ex().apertureSetting && (
 						<span>
-							<em>f</em>/{ex.apertureSetting}
+							<em>f</em>/{ex().apertureSetting}
 						</span>
 					)}
-					{ex.focalLength && <span>{ex.focalLength}</span>}
-					{ex.iso && <span>ISO {ex.iso}</span>}
-					{ex.exposureProgram && (
+					{ex().focalLength && <span>{ex().focalLength}</span>}
+					{ex().iso && <span>ISO {ex().iso}</span>}
+					{ex().exposureProgram && (
 						<span>
 							{{
 								"Program AE": "Auto",
 								"Shutter speed priority AE": "Shutter Priority",
 								"Aperture-priority AE": "Aperture Priority",
-							}[ex.exposureProgram] ?? ex.exposureProgram}
+							}[ex().exposureProgram] ?? ex().exposureProgram}
 						</span>
 					)}
 				</div>

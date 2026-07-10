@@ -101,6 +101,12 @@
 			"https://web.dev/blog",
 			"../static/blog/feed.xml",
 			"Posts on the state of the art in web development from the Google Chrome team."
+		],
+		[
+			"Avid Andrew",
+			"https://avidandrew.com",
+			"/feed/index.xml",
+			"Insightful information about how to use darktable, and photography tips and tricks. Great care is evident in these posts, and I have a lot to learn from him."
 		]
 	],
 	"articles": [

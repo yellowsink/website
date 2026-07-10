@@ -75,7 +75,13 @@
 			"Super super high effort, miscellaneous but always beautiful interactive data-driven publication"
 		],
 		["Nikitonsky", "https://tonsky.me", "/atom.xml", "Some pretty nice misc posts about software"],
-		["Tzvetan Mikov", "https://tmikov.blogspot.com", "/feeds/posts/default", "Low level software things"]
+		["Tzvetan Mikov", "https://tmikov.blogspot.com", "/feeds/posts/default", "Low level software things"],
+		[
+			"Avid Andrew",
+			"https://avidandrew.com",
+			"/feed/index.xml",
+			"Insightful information about how to use darktable, and photography tips and tricks. Great care is evident in these posts, and I have a lot to learn from him."
+		]
 	],
 	"blogsIRecommend": [
 		[
@@ -101,12 +107,6 @@
 			"https://web.dev/blog",
 			"../static/blog/feed.xml",
 			"Posts on the state of the art in web development from the Google Chrome team."
-		],
-		[
-			"Avid Andrew",
-			"https://avidandrew.com",
-			"/feed/index.xml",
-			"Insightful information about how to use darktable, and photography tips and tricks. Great care is evident in these posts, and I have a lot to learn from him."
 		]
 	],
 	"articles": [

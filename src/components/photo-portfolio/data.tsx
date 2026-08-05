@@ -265,3 +265,13 @@ export function useRemoveFeaturedCat() {
 		},
 	}));
 }
+
+// app.post("/admin/roll/:id/clear_taken_times",  (ctx) => ctx.json(removeRollTakenTimes(ctx.req.param("id"))));
+export function useRollClearTakenTimes() {
+	return useMutation(() => ({
+		mutationFn: (roll: number) =>
+			request<Photo[]>(`/admin/roll/${roll}/clear_taken_times`, true, "POST"),
+		onSuccess: (_data, vars, _omr, ctx) =>
+			ctx.client.invalidateQueries({ queryKey: ["photos", "by-roll", vars] })
+	}));
+}
